@@ -1,7 +1,6 @@
-package com.adnanbk.ecommerceang.dao;
+package com.adnanbk.ecommerceang.reposetories;
 
 import com.adnanbk.ecommerceang.entity.ProductCategory;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.web.bind.annotation.CrossOrigin;

@@ -1,8 +1,10 @@
-package com.adnanbk.ecommerceang.entity;
+package com.adnanbk.ecommerceang;
 
-import com.adnanbk.ecommerceang.dao.OrderItemRepo;
-import com.adnanbk.ecommerceang.dao.OrderRepository;
-import com.adnanbk.ecommerceang.dao.ProductRepository;
+import com.adnanbk.ecommerceang.entity.ApiError;
+import com.adnanbk.ecommerceang.entity.ResponseError;
+import com.adnanbk.ecommerceang.entity.UserOrder;
+import com.adnanbk.ecommerceang.reposetories.OrderItemRepo;
+import com.adnanbk.ecommerceang.reposetories.OrderRepository;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.adnanbk.ecommerceang.dao;
+package com.adnanbk.ecommerceang.reposetories;
 
 
 import com.adnanbk.ecommerceang.entity.Product;
