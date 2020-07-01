@@ -38,20 +38,12 @@ public class Controller   {
     }
 
 
-/*   @PostConstruct
-    public void postControll(){
-       UserOrder o=new UserOrder();
-       o.setEmail("aa@aa");
-       o.setFirstName("a");
-       o.setLastName("aa@aa");
-       orderRepository.save(o);
 
-       System.out.println("ok");
-    }*/
 
-    @GetMapping("/userOrders")
-    public ResponseEntity<Iterable<UserOrder>> getOrders(){
-        return ResponseEntity.ok(orderRepository.findAll());
+    @GetMapping("/userOrders/byUserName/{userName}")
+    public ResponseEntity<Iterable<UserOrder>> getOrders(@PathVariable(required = false) String userName){
+
+        return ResponseEntity.ok(orderRepository.findByAppUserUserName(userName));
     }
 
 
