@@ -1,7 +1,6 @@
-package com.adnanbk.ecommerceang.entity;
+package com.adnanbk.ecommerceang.models;
 
 import lombok.Data;
-import org.apache.catalina.User;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

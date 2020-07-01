@@ -1,7 +1,7 @@
 package com.adnanbk.ecommerceang.reposetories;
 
 
-import com.adnanbk.ecommerceang.entity.Product;
+import com.adnanbk.ecommerceang.models.Product;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

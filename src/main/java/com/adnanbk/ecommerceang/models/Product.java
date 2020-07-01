@@ -1,14 +1,10 @@
-package com.adnanbk.ecommerceang.entity;
+package com.adnanbk.ecommerceang.models;
 
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.data.jpa.repository.Query;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
