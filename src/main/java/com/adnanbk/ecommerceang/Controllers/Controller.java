@@ -50,8 +50,9 @@ public class Controller   {
     }*/
 
     @GetMapping("/userOrders")
-    public ResponseEntity<Iterable<UserOrder>> getOrders(){
-        return ResponseEntity.ok(orderRepository.findAll());
+    public ResponseEntity<Iterable<UserOrder>> getOrders(@RequestParam String userName){
+
+        return ResponseEntity.ok(orderRepository.findByAppUserUserName(userName));
     }
 
 
