@@ -49,8 +49,8 @@ public class Controller   {
        System.out.println("ok");
     }*/
 
-    @GetMapping("/userOrders")
-    public ResponseEntity<Iterable<UserOrder>> getOrders(@RequestParam String userName){
+    @GetMapping("/userOrders/byUserName/{userName}")
+    public ResponseEntity<Iterable<UserOrder>> getOrders(@PathVariable(required = false) String userName){
 
         return ResponseEntity.ok(orderRepository.findByAppUserUserName(userName));
     }
