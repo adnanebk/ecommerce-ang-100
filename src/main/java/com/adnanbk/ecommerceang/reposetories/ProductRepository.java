@@ -2,6 +2,7 @@ package com.adnanbk.ecommerceang.reposetories;
 
 
 import com.adnanbk.ecommerceang.models.Product;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +10,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.web.bind.annotation.CrossOrigin;
+
+import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
 
 @CrossOrigin
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -35,15 +39,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Cacheable("allPro")
     Page<Product> findAll(Pageable pageable);
+    @RestResource(path="byDate")
+    Page<Product> findAllByDateCreated(Date date, Pageable pageable);
 
     @Override
     @RestResource(exported = false)
     <S extends Product> S save(S s);
 
+
     @Override
     @RestResource(exported = false)
     void delete(Product product);
-
-
 
 }

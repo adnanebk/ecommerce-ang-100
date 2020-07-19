@@ -20,14 +20,15 @@ public class ProductCategory {
     @Column(name = "category_name")
     private String categoryName;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category",orphanRemoval = true)
+    @OneToMany( mappedBy = "category",orphanRemoval = true,cascade = CascadeType.ALL)
     private Set<Product> products;
 
 
 public void addProduct(Product product){
     products.add(product);
-    product.setCategory(this);
+  product.setCategory(this);
 }
+
     public void removeProduct(Product product){
         products.remove(product);
         product.setCategory(null);

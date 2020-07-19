@@ -23,7 +23,7 @@ import java.util.*;
 
 @RepositoryRestController
 @CrossOrigin
-public class Controller   {
+public class OrderController {
 
 
     private OrderRepository orderRepository;
@@ -31,7 +31,7 @@ public class Controller   {
     private UserRepo userRepo;
 
 
-    public Controller(OrderRepository orderRepository, OrderItemRepo orderItemRepo, UserRepo userRepo) {
+    public OrderController(OrderRepository orderRepository, OrderItemRepo orderItemRepo, UserRepo userRepo) {
         this.orderRepository = orderRepository;
         this.orderItemRepo = orderItemRepo;
         this.userRepo = userRepo;
