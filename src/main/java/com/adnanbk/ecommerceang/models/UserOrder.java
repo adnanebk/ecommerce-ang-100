@@ -23,11 +23,11 @@ public class UserOrder {
     private int id;
 
     @NotEmpty
-    @Length(min = 2,message = "should be greater or equal 2")
+    @Length(min = 2,message = "{error.min}")
     private String firstName;
 
     @NotEmpty
-    @Length(min = 2,message = "should be greater or equal 2")
+    @Length(min = 2,message = "{error.min}")
     private String lastName;
 
     @NotEmpty
@@ -38,7 +38,7 @@ public class UserOrder {
     private String country;
 
     @NotEmpty
-    @Length(min = 4,message = "should be greater or equal 4")
+    @Length(min = 4,message = "{error.min}")
     private String street;
 
     @NotEmpty

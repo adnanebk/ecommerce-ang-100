@@ -42,14 +42,15 @@ public class AppUser {
 
 	@Column
 	private String adress;
+
 	private String city;
 	private String country;
 
 	@Column
 	@NotEmpty
-	@Length(min = 4,message = "should be greater or equal 4")
+	@Length(min = 4,message = "{error.min}")
 	private String password;
-	@Length(min = 4,message = "should be greater or equal 4")
+	@Length(min = 4,message = "{error.min}")
 	@Transient
 	private String confirmPassword;
 

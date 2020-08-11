@@ -16,95 +16,9 @@ import java.util.Objects;
 
 @Entity
 @Table(name="product")
+@Data
 public class Product {
-    public Long getId() {
-        return Id;
-    }
 
-    public void setId(Long id) {
-        Id = id;
-    }
-
-    public ProductCategory getCategory() {
-        return category;
-    }
-
-    public void setCategory(ProductCategory category) {
-       // this.categoryName = category.getCategoryName();
-        this.category = category;
-    }
-
-    public String getSku() {
-        return sku;
-    }
-
-    public void setSku(String sku) {
-        this.sku = sku;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public int getUnitsInStock() {
-        return unitsInStock;
-    }
-
-    public void setUnitsInStock(int unitsInStock) {
-        this.unitsInStock = unitsInStock;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Date getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -125,7 +39,7 @@ public class Product {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;*/
 
-    @Column(name = "sku")
+    @Column(name = "sku",unique = true)
     @NotEmpty
     private String sku;
 
@@ -134,8 +48,7 @@ public class Product {
     private String name;
 
     @Column(name = "description")
-    @NotEmpty
-    @Length(min = 10,message = "should be greater or equal 10")
+    @Length(min = 10,message = "{error.min}")
     private String description;
 
     @Column(name = "unit_price")
@@ -160,6 +73,7 @@ public class Product {
     private Date lastUpdated;
 
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -174,14 +88,11 @@ public class Product {
     }
 
     public String getCategoryName() {
-        if((categoryName==null || categoryName.isEmpty()) && category!=null )
-            this.categoryName = category.getCategoryName();
+        if ((categoryName!=null && !categoryName.isEmpty()))
         return categoryName;
+        return category.getCategoryName();
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
 
 
     public void setFromProduct(Product product) {

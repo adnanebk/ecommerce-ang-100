@@ -48,13 +48,5 @@ public class ProductService {
         product.setImageUrl(baseUrl+"/uploadingDir/"+product.getImageUrl());
         return productRepo.save(product);
     }
-    @CacheEvict(value = {"byCategory","byId","byCategoryAndName","byName","allPro"},allEntries = true)
-    public boolean removeProduct(int id) {
 
-        if(!productRepo.existsById((long) id))
-            return false;
-        else
-            productRepo.deleteById((long) id);
-        return true;
-    }
 }

@@ -1,4 +1,4 @@
-package com.adnanbk.ecommerceang.models;
+package com.adnanbk.ecommerceang.dto;
 
 import lombok.Data;
 
@@ -8,6 +8,11 @@ public class ResponseError {
     private String fieldName;
     private String name;
     private String message;
+
+    @Override
+    public String toString() {
+        return  name + ' '+message;
+    }
 
     public ResponseError(String fieldName, String message) {
         this.name=fieldName;

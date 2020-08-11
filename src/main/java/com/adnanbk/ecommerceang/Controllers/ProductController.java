@@ -17,32 +17,42 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 @RepositoryRestController
 @CrossOrigin
 public class ProductController {
 
-    private ImageService imageService;
-    private ProductService productService;
+    private final ImageService imageService;
+    private final ProductService productService;
 
     public ProductController(ImageService imageService, ProductService productService) {
         this.imageService = imageService;
         this.productService = productService;
     }
 
-    @PostMapping(value = "/products/images",consumes = { "multipart/form-data" },produces = {"application/json"})
-    public ResponseEntity UploadProductImage(@RequestParam("image") MultipartFile file){
-        String url="";
-        String burl =ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        try {
-             url = burl+"/uploadingDir/"+this.imageService.CreateImage(file);
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-      return ResponseEntity.ok(url);
-    }
+    @PostMapping(value = "/products/images")
+    public Callable<ResponseEntity> UploadProductImage(@RequestParam("image") MultipartFile file){
 
-    @PutMapping("/products")
+        String burl =ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+      return   ()->{
+             String url;
+            try {
+                url = burl+"/uploadingDir/"+this.imageService.CreateImage(file);
+            } catch (IOException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+            return ResponseEntity.ok(url);
+        };
+
+    }
+    @PostMapping("/products/v2")
+    public ResponseEntity<?> addProduct(@Valid @RequestBody Product product){
+        Product prod = productService.saveProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
+
+        return ResponseEntity.created(URI.create("/api/products/"+product.getId())).body(prod);
+    }
+    @PutMapping("/products/v2")
     public ResponseEntity<?> updateProduct(@Valid @RequestBody Product product){
         Optional<Product> updatedProduct =productService.updateProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
       if(updatedProduct.isEmpty())
@@ -50,21 +60,6 @@ public class ProductController {
 
         return ResponseEntity.ok(updatedProduct.get());
     }
-    @DeleteMapping("/products/{id}")
-    public ResponseEntity<?> removeProduct(@PathVariable int id){
-
-      boolean isRemoved =this.productService.removeProduct(id);
-       if(!isRemoved)
-           return ResponseEntity.badRequest().body("Product not found");
-        return ResponseEntity.noContent().build();
-    }
-    @PostMapping("/products")
-    public ResponseEntity<?> addProduct(@Valid @RequestBody Product product){
-    Product prod = productService.saveProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
-
-        return ResponseEntity.created(URI.create("/api/products/"+product.getId())).body(prod);
-    }
-
 
 
 }

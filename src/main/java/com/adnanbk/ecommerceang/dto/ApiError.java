@@ -1,4 +1,4 @@
-package com.adnanbk.ecommerceang.models;
+package com.adnanbk.ecommerceang.dto;
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;

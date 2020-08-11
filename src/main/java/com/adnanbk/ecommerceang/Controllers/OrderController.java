@@ -1,8 +1,8 @@
 package com.adnanbk.ecommerceang.Controllers;
 
-import com.adnanbk.ecommerceang.models.ApiError;
+import com.adnanbk.ecommerceang.dto.ApiError;
 import com.adnanbk.ecommerceang.models.AppUser;
-import com.adnanbk.ecommerceang.models.ResponseError;
+import com.adnanbk.ecommerceang.dto.ResponseError;
 import com.adnanbk.ecommerceang.models.UserOrder;
 import com.adnanbk.ecommerceang.reposetories.OrderItemRepo;
 import com.adnanbk.ecommerceang.reposetories.OrderRepository;
@@ -26,9 +26,9 @@ import java.util.*;
 public class OrderController {
 
 
-    private OrderRepository orderRepository;
-    private OrderItemRepo orderItemRepo;
-    private UserRepo userRepo;
+    private final OrderRepository orderRepository;
+    private final OrderItemRepo orderItemRepo;
+    private final UserRepo userRepo;
 
 
     public OrderController(OrderRepository orderRepository, OrderItemRepo orderItemRepo, UserRepo userRepo) {

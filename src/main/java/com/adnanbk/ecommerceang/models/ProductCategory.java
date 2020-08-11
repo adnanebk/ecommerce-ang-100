@@ -1,6 +1,7 @@
 package com.adnanbk.ecommerceang.models;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -12,12 +13,14 @@ import java.util.Set;
 @Setter
 public class ProductCategory {
 
+
     @Id
     @GeneratedValue
     @Column(name = "id")
     private Long Id;
 
-    @Column(name = "category_name")
+    @Column(name = "category_name",unique = true)
+    @Length(min = 2,message = "{error.min}")
     private String categoryName;
 
     @OneToMany( mappedBy = "category",orphanRemoval = true,cascade = CascadeType.ALL)
