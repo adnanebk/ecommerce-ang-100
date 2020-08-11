@@ -1,4 +1,4 @@
-package com.adnanbk.ecommerceang.security;
+package com.adnanbk.ecommerceang.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.FileEditor;

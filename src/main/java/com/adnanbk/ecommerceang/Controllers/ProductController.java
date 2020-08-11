@@ -1,22 +1,18 @@
 package com.adnanbk.ecommerceang.Controllers;
 
 import com.adnanbk.ecommerceang.models.*;
-import com.adnanbk.ecommerceang.security.ImageService;
+import com.adnanbk.ecommerceang.services.ImageService;
 import com.adnanbk.ecommerceang.services.ProductService;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.persistence.PersistenceException;
 import javax.validation.*;
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.Callable;
 
 @RepositoryRestController
