@@ -27,12 +27,6 @@ public class ImageService {
     public String CreateImage(MultipartFile image) throws IOException {
         String resoureString;
 
-        try {
-            Thread.sleep(8000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         String fileName = image.getOriginalFilename().toLowerCase();
 
             if (fileName != null && !fileName.isEmpty()) {
