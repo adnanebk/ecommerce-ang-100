@@ -3,9 +3,14 @@ package com.adnanbk.ecommerceang.Controllers;
 
 import com.adnanbk.ecommerceang.dto.JwtResponse;
 import com.adnanbk.ecommerceang.dto.ApiError;
+import com.adnanbk.ecommerceang.dto.LoginUserDto;
 import com.adnanbk.ecommerceang.models.AppUser;
 import com.adnanbk.ecommerceang.dto.ResponseError;
 import com.adnanbk.ecommerceang.services.AuthService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
@@ -30,14 +35,16 @@ public class AuthController {
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<?> create(@RequestBody @Valid AppUser user)   {
+    @ApiOperation(value = "register new user",response =JwtResponse.class )
+    public ResponseEntity<?> create( @RequestBody @Valid AppUser user)   {
 
        JwtResponse jwtResponse= authService.handleRegister(user);
         return new ResponseEntity(jwtResponse,HttpStatus.CREATED);
 
     }
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody  AppUser appUser) {
+    @ApiOperation(value = "Login the user",response =JwtResponse.class )
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginUserDto appUser) {
 
 
 try {

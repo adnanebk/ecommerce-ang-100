@@ -7,6 +7,9 @@ import com.adnanbk.ecommerceang.models.UserOrder;
 import com.adnanbk.ecommerceang.reposetories.OrderItemRepo;
 import com.adnanbk.ecommerceang.reposetories.OrderRepository;
 import com.adnanbk.ecommerceang.reposetories.UserRepo;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,7 @@ import javax.validation.Valid;
 
 import java.security.Principal;
 import java.util.*;
+
 
 
 @RepositoryRestController
@@ -50,6 +54,7 @@ public class OrderController {
     }*/
 
     @GetMapping("/userOrders/byUserName/{userName}")
+    @ApiOperation(value = "get orders by username",notes = "this endpoint returns all orders of the specified user name including the order items ")
     public ResponseEntity<Iterable<UserOrder>> getOrders(@PathVariable(required = false) String userName){
 
         return ResponseEntity.ok(orderRepository.findByAppUserUserName(userName));

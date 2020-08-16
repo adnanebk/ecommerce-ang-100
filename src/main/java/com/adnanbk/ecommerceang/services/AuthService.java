@@ -2,8 +2,11 @@ package com.adnanbk.ecommerceang.services;
 
 import com.adnanbk.ecommerceang.Jwt.JwtTokenUtil;
 import com.adnanbk.ecommerceang.dto.JwtResponse;
+import com.adnanbk.ecommerceang.dto.LoginUserDto;
+import com.adnanbk.ecommerceang.dto.RegisterUserDto;
 import com.adnanbk.ecommerceang.models.AppUser;
 import com.adnanbk.ecommerceang.reposetories.UserRepo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,7 +36,7 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-    public JwtResponse handleLogin(AppUser appUser){
+    public JwtResponse handleLogin(LoginUserDto appUser){
       var currentUser  = userRepo.findByUserName(appUser.getUserName());
        if (currentUser==null) {
             throw new BadCredentialsException("Invalid username");
@@ -55,13 +58,17 @@ public class AuthService {
         }
 
         final String token = jwtTokenUtil.generateToken(appUser.getUserName());
-        return new JwtResponse(token,currentUser);
+        RegisterUserDto registerUserDto = new RegisterUserDto();
+        BeanUtils.copyProperties(currentUser,registerUserDto);
+        return new JwtResponse(token,registerUserDto);
     }
     public JwtResponse handleRegister(AppUser user)
     {
         user.setPassword(passwordEncode.encode(user.getPassword()));
         user= userRepo.save(user);
         String token = this.jwtTokenUtil.generateToken(user.getUserName());
-      return   new JwtResponse(token,user);
+        RegisterUserDto registerUserDto = new RegisterUserDto();
+        BeanUtils.copyProperties(user,registerUserDto);
+      return   new JwtResponse(token,registerUserDto);
     }
 }

@@ -3,6 +3,7 @@ package com.adnanbk.ecommerceang.Controllers;
 import com.adnanbk.ecommerceang.models.*;
 import com.adnanbk.ecommerceang.services.ImageService;
 import com.adnanbk.ecommerceang.services.ProductService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +16,10 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
-@RepositoryRestController
+
+@RestController
 @CrossOrigin
+@RequestMapping("/api")
 public class ProductController {
 
     private final ImageService imageService;
@@ -28,7 +31,8 @@ public class ProductController {
     }
 
     @PostMapping(value = "/products/images")
-    public Callable<ResponseEntity> UploadProductImage(@RequestParam("image") MultipartFile file){
+    @ApiOperation(value = "Create product image",notes = "this endpoint return image url",response = String.class)
+    public Callable<ResponseEntity<String>> UploadProductImage(@RequestParam("image") MultipartFile file){
 
         String burl =ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
       return   ()->{
@@ -43,12 +47,16 @@ public class ProductController {
 
     }
     @PostMapping("/products/v2")
-    public ResponseEntity<?> addProduct(@Valid @RequestBody Product product){
+    @ApiOperation(value = "Add new product",notes = "This endpoint bind a category to created product based on category name ," +
+            "and it  also create image url based on the file name",response = Product.class)
+    public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product){
         Product prod = productService.saveProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
 
         return ResponseEntity.created(URI.create("/api/products/"+product.getId())).body(prod);
     }
     @PutMapping("/products/v2")
+    @ApiOperation(value = "update product",notes = "This endpoint  bind a category to updated product based on category name ," +
+            "and it  also create image url based on the file name",response = Product.class)
     public ResponseEntity<?> updateProduct(@Valid @RequestBody Product product){
         Optional<Product> updatedProduct =productService.updateProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
       if(updatedProduct.isEmpty())

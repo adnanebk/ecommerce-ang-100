@@ -2,6 +2,7 @@ package com.adnanbk.ecommerceang.models;
 
 import com.adnanbk.ecommerceang.validations.ConfirmPassword;
 import com.adnanbk.ecommerceang.validations.UniqueUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -13,7 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "user")
 @Data
-@JsonIgnoreProperties(value = {"password","id"}, allowSetters = true)
+@JsonIgnoreProperties(value = {"id"}, allowSetters = true)
 @ConfirmPassword
 public class AppUser {
 
@@ -50,11 +51,13 @@ public class AppUser {
 	@NotEmpty
 	@Length(min = 4,message = "{error.min}")
 	private String password;
+
 	@Length(min = 4,message = "{error.min}")
 	@Transient
 	private String confirmPassword;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "appUser",orphanRemoval = true)
+	@JsonIgnore
 	private Set<UserOrder> userOrders;
 
 	public void addOrder(UserOrder order){

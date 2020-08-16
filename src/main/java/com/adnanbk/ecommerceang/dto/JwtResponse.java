@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 public class JwtResponse {
 
     private String token;
-    private AppUser appUser;
+    private RegisterUserDto appUser;
 
-    public JwtResponse(String token,AppUser appUser) {
+    public JwtResponse(String token,RegisterUserDto appUser) {
         this.token = token;
         this.appUser=appUser;
     }
