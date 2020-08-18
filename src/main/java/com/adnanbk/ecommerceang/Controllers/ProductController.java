@@ -4,6 +4,7 @@ import com.adnanbk.ecommerceang.models.*;
 import com.adnanbk.ecommerceang.services.ImageService;
 import com.adnanbk.ecommerceang.services.ProductService;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +14,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.*;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
+
 
 
 
@@ -49,14 +52,15 @@ public class ProductController {
     @PostMapping("/products/v2")
     @ApiOperation(value = "Add new product",notes = "This endpoint bind a category to created product based on category name ," +
             "and it  also create image url based on the file name",response = Product.class)
+    @RestResource // this is needed to be exported to documentation
     public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product){
-        Product prod = productService.saveProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
-
+       Product prod = productService.saveProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
         return ResponseEntity.created(URI.create("/api/products/"+product.getId())).body(prod);
     }
     @PutMapping("/products/v2")
     @ApiOperation(value = "update product",notes = "This endpoint  bind a category to updated product based on category name ," +
             "and it  also create image url based on the file name",response = Product.class)
+    @RestResource // this is needed to be exported to documentation
     public ResponseEntity<?> updateProduct(@Valid @RequestBody Product product){
         Optional<Product> updatedProduct =productService.updateProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
       if(updatedProduct.isEmpty())
