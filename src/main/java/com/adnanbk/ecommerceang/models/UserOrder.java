@@ -19,7 +19,7 @@ import java.util.List;
 public class UserOrder {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @NotEmpty
@@ -51,13 +51,15 @@ public class UserOrder {
     @CreationTimestamp
     private Date dateCreated;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true
-           // ,mappedBy = "userOrder"
-    )
 
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true
+           ,mappedBy = "userOrder"
+    )
     private List<OrderItem> orderItems;
 
-    public void setOrderItems(List<OrderItem> orderItems) {
+    public void setUserOrderItems(List<OrderItem> orderItems) {
+        orderItems.forEach(e->e.setUserOrder(this));
         this.orderItems = orderItems;
     }
 

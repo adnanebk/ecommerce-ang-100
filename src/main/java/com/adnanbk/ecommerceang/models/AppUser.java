@@ -61,6 +61,7 @@ public class AppUser {
 	private Set<UserOrder> userOrders;
 
 	public void addOrder(UserOrder order){
+
 		userOrders.add(order);
 		order.setAppUser(this);
 	}

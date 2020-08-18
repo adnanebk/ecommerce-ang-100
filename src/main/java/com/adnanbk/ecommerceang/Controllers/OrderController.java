@@ -3,6 +3,7 @@ package com.adnanbk.ecommerceang.Controllers;
 import com.adnanbk.ecommerceang.dto.ApiError;
 import com.adnanbk.ecommerceang.models.AppUser;
 import com.adnanbk.ecommerceang.dto.ResponseError;
+import com.adnanbk.ecommerceang.models.OrderItem;
 import com.adnanbk.ecommerceang.models.UserOrder;
 import com.adnanbk.ecommerceang.reposetories.OrderItemRepo;
 import com.adnanbk.ecommerceang.reposetories.OrderRepository;
@@ -10,6 +11,7 @@ import com.adnanbk.ecommerceang.reposetories.UserRepo;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +24,6 @@ import javax.validation.Valid;
 
 import java.security.Principal;
 import java.util.*;
-
 
 
 @RepositoryRestController
@@ -55,9 +56,10 @@ public class OrderController {
 
     @GetMapping("/userOrders/byUserName/{userName}")
     @ApiOperation(value = "get orders by username",notes = "this endpoint returns all orders of the specified user name including the order items ")
-    public ResponseEntity<Iterable<UserOrder>> getOrders(@PathVariable(required = false) String userName){
-
-        return ResponseEntity.ok(orderRepository.findByAppUserUserName(userName));
+    @RestResource
+    public ResponseEntity<Iterable<UserOrder>> getOrders(@PathVariable String userName){
+    var ll = orderRepository.findByAppUserUserName(userName);
+        return ResponseEntity.ok(ll);
     }
 
 
@@ -65,24 +67,21 @@ public class OrderController {
     public ResponseEntity<UserOrder> saveOrder(@Valid @RequestBody UserOrder userOrder, Principal principal){
         AppUser appUser =userRepo.findByUserName(principal.getName());
         userOrder.setAppUser(appUser);
-       userOrder.setOrderItems(orderItemRepo.saveAll(userOrder.getOrderItems()));
-       // userOrder.se(productRepository.findAllById(userOrder.getProducts().stream().map(p->p.getId()).collect(Collectors.toList())));
+       userOrder.setUserOrderItems(orderItemRepo.saveAll(userOrder.getOrderItems()));
         return new ResponseEntity(orderRepository.save(userOrder),HttpStatus.CREATED);
     }
 
 
 
-    @ExceptionHandler({ PersistenceException.class })
+    @ExceptionHandler({ ConstraintViolationException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleConstraintViolation(
-            PersistenceException ex) {
+            ConstraintViolationException ex) {
         Set<ResponseError> errors = new HashSet<>();
-        if(ex.getCause() instanceof ConstraintViolationException )
-        {
-            ConstraintViolationException cause = (ConstraintViolationException) ex.getCause();
-            for (ConstraintViolation<?> violation : cause.getConstraintViolations()) {
+
+            for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
                 errors.add(new ResponseError(violation.getPropertyPath().toString(),violation.getMessage()));
-            }
+
         }
 
 
