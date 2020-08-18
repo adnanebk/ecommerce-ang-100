@@ -17,9 +17,9 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 
 
-@RestController
+
 @CrossOrigin
-@RequestMapping("/api")
+@RepositoryRestController
 public class ProductController {
 
     private final ImageService imageService;
