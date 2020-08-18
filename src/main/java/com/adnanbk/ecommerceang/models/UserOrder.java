@@ -52,9 +52,8 @@ public class UserOrder {
     private Date dateCreated;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true
-           // ,mappedBy = "userOrder"
+            ,mappedBy = "userOrder"
     )
-
     private List<OrderItem> orderItems;
 
     public void setOrderItems(List<OrderItem> orderItems) {
