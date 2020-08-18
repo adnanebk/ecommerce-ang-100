@@ -1,5 +1,6 @@
 package com.adnanbk.ecommerceang.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ public class OrderItem {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
     @Column(name = "name")
@@ -26,8 +27,9 @@ public class OrderItem {
     @Column(name = "image_url")
     private String imageUrl;
 
-  @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_id", nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    @JsonIgnore // you have to do this to avoid circular relationship
     private UserOrder userOrder;
 
     private int quantity;
