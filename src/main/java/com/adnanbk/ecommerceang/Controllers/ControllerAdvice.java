@@ -48,8 +48,7 @@ public class ControllerAdvice {
 
         if(ex.getCause() instanceof SQLIntegrityConstraintViolationException)
         {
-            var cause = (SQLIntegrityConstraintViolationException) ex.getCause();
-            if(cause.getMessage().toLowerCase().contains("unique"))
+     
             return ResponseEntity.badRequest().body("You are trying to insert an existing value  , try another one");
 
         }
