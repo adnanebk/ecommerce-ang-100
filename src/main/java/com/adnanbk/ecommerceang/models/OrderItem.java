@@ -26,9 +26,9 @@ public class OrderItem {
     @Column(name = "image_url")
     private String imageUrl;
 
-  /* @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id", nullable = false)
-    private UserOrder userOrder;*/
+    private UserOrder userOrder;
 
     private int quantity;
 
