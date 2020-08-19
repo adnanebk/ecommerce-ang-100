@@ -33,13 +33,8 @@ public class ImageServiceImp implements ImageService {
                 resoureString = dir + "/uploadingDir/" + fileName;
                 image.transferTo(Paths.get(resoureString));
             }
-            fileName
 return fileName;
 
     }
 
-    @Override
-    public String getImageUl() {
-        return null;
-    }
 }
