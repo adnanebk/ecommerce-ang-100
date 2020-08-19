@@ -14,7 +14,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.*;
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
@@ -54,7 +53,7 @@ public class ProductController {
             "and it  also create image url based on the file name",response = Product.class)
     @RestResource // this is needed to be exported to documentation
     public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product){
-       Product prod = productService.saveProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
+       Product prod = productService.addProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
         return ResponseEntity.created(URI.create("/api/products/"+product.getId())).body(prod);
     }
     @PutMapping("/products/v2")
