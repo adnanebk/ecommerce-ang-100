@@ -18,6 +18,17 @@ import java.util.Set;
 @CrossOrigin
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+    boolean existsBySku(String sku);
+
+    @Query("select count(p)>0 from Product p where p.Id != ?1 and  p.name = ?2")
+    boolean existsByIdAndNameIsNot(long id,String name);
+
+    boolean existsByName(String name);
+
+    @Query("select count(p)>0 from Product p where p.Id != ?1 and  p.sku = ?2")
+    boolean existsByIdAndSkuIsNot(long id,String sku);
+
+
     @RestResource(path="byCategory")
     @Query("select prod from Product as prod where prod.category.Id = ?1")
     @Cacheable("byCategory")
