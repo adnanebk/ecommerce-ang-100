@@ -27,12 +27,12 @@ public class ProductServiceImp implements ProductService {
     @CacheEvict(value = {"byCategory","byId","byCategoryAndName","byName","allPro"},allEntries = true)
     public Optional<Product> updateProduct(Product product, String baseUrl) {
       var updatedProduct =  productRepo.findById(product.getId()).map(prod -> {
-
+          if (!prod.getCategoryName().equalsIgnoreCase(product.getCategoryName()))
           prod.setCategory(categoryRepo.findByCategoryName(product.getCategoryName()));
               if(!product.getImageUrl().equals(prod.getImageUrl()))
               prod.setImageUrl(baseUrl+"/uploadingDir/"+product.getImageUrl());
-          prod.setFromProduct(product);
-          productRepo.save(prod);
+              prod.setFromProduct(product);
+              productRepo.save(prod);
           return prod;
         });
       return updatedProduct;
