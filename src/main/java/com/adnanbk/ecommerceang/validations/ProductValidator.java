@@ -18,8 +18,6 @@ public class ProductValidator implements Validator {
         this.productRepository = productRepository;
     }
 
-
-
     @Override
     public boolean supports(Class<?> aClass) {
         return Product.class.isAssignableFrom(aClass);
@@ -28,7 +26,6 @@ public class ProductValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         Product product = (Product) o;
-
        boolean isNameExist = productRepository.existsByIdAndNameIsNot(product.getId(),product.getName());
        boolean isSkuExist =  productRepository.existsByIdAndSkuIsNot(product.getId(),product.getSku());
 
