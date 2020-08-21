@@ -31,6 +31,11 @@ public class ProductController {
         this.imageService = imageService;
         this.productService = productService;
     }
+    
+    /*    @InitBinder("product") // add this parameter to apply this binder only to request parameters with this name
+    protected void bidValidator(WebDataBinder binder) {
+        binder.addValidators(productValidator);
+    }*/
 
     @PostMapping(value = "/products/images")
     @ApiOperation(value = "Create product image",notes = "this endpoint return image url",response = String.class)
