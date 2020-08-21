@@ -2,6 +2,7 @@ package com.adnanbk.ecommerceang.Controllers;
 
 import com.adnanbk.ecommerceang.dto.ApiError;
 import com.adnanbk.ecommerceang.dto.ResponseError;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,19 +15,31 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ControllerAdvice {
 
-
-
     @ExceptionHandler({ ConstraintViolationException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleConstraintViolation0(
             ConstraintViolationException ex) {
+       if(ex.getConstraintViolations().size()>0)
+       {
+           Set<ResponseError> errors = new HashSet<>();
 
+           for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+               errors.add(new ResponseError(violation.getPropertyPath().toString(),violation.getMessage()));
+
+           }
+
+
+           ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
+
+           return new  ResponseEntity(apiError, apiError.getStatus());
+       }
         Set<String> errors = generateErrors(ex);
 
         return ResponseEntity.badRequest().body(errors);
@@ -40,7 +53,6 @@ public class ControllerAdvice {
         if(ex.getCause() instanceof ConstraintViolationException)
         {
             ConstraintViolationException cause = (ConstraintViolationException) ex.getCause();
-
             Set<String> errors  = generateErrors(cause);
             return ResponseEntity.badRequest().body(errors);
         }
@@ -60,17 +72,17 @@ public class ControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex) {
-
-        Set<ResponseError> errors = ex.getBindingResult()
+        Set<Object> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(x -> new ResponseError(x.getField(),x.getDefaultMessage()))
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toSet());
 
         ex.getBindingResult().getGlobalErrors().stream()
                 .forEach(x -> {
-                    if(x.getCode().toLowerCase().contains("confirmpassword"))
+                    if(x.getCode().toLowerCase().contains("password"))
                         errors.add(new ResponseError("confirmPassword",x.getDefaultMessage()));
+
                 });
 
         // body.put("errors", errors);

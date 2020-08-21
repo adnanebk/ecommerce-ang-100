@@ -73,21 +73,4 @@ public class OrderController {
 
 
 
-    @ExceptionHandler({ ConstraintViolationException.class })
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleConstraintViolation(
-            ConstraintViolationException ex) {
-        Set<ResponseError> errors = new HashSet<>();
-
-            for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
-                errors.add(new ResponseError(violation.getPropertyPath().toString(),violation.getMessage()));
-
-        }
-
-
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
-
-        return new  ResponseEntity(apiError, apiError.getStatus());
-    }
-
 }
