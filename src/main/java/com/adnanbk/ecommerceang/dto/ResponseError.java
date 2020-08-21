@@ -18,16 +18,16 @@ public class ResponseError {
         this.name=fieldName;
         if(!fieldName.equals(fieldName.toLowerCase()))
         {
-            String name="";
+            StringBuilder name= new StringBuilder();
             for (Character c :fieldName.toCharArray()) {
                 if(Character.isUpperCase(c))
                 {
-                    name+=" "+c.toString();
+                    name.append(" ").append(c.toString());
                 }
                 else
-                name+=c.toString();
+                name.append(c.toString());
             }
-            this.name=name.toLowerCase();
+            this.name= name.toString().toLowerCase();
         }
 
         this.fieldName = fieldName;
