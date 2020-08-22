@@ -23,16 +23,18 @@ import java.util.stream.Collectors;
 public class ControllerAdvice {
 
 
-    @ExceptionHandler({ PersistenceException.class,ConstraintViolationException.class})
+    @ExceptionHandler({ PersistenceException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleConstraintViolation(
             RuntimeException ex) {
-        System.out.println("******persistence exceptio******");
         if(NestedExceptionUtils.getRootCause(ex)  instanceof ConstraintViolationException)
         {
             ConstraintViolationException cause = (ConstraintViolationException) NestedExceptionUtils.getRootCause(ex);
-            Set<String> errors  = generateErrors(cause);
-            return ResponseEntity.badRequest().body(errors);
+            return ResponseEntity.badRequest().body(generateErrors(cause));
+        }
+        if(ex instanceof ConstraintViolationException)
+        {
+            return ResponseEntity.badRequest().body(generateErrors((ConstraintViolationException) ex));   
         }
          if(NestedExceptionUtils.getRootCause(ex) instanceof SQLIntegrityConstraintViolationException)
         {
