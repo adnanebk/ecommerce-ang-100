@@ -27,15 +27,13 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleConstraintViolation(
             RuntimeException ex) {
+        System.out.println("******persistence exceptio******");
         if(NestedExceptionUtils.getRootCause(ex)  instanceof ConstraintViolationException)
         {
             ConstraintViolationException cause = (ConstraintViolationException) NestedExceptionUtils.getRootCause(ex);
             return ResponseEntity.badRequest().body(generateErrors(cause));
         }
-        if(ex instanceof ConstraintViolationException)
-        {
-            return ResponseEntity.badRequest().body(generateErrors((ConstraintViolationException) ex));   
-        }
+        
          if(NestedExceptionUtils.getRootCause(ex) instanceof SQLIntegrityConstraintViolationException)
         {
             return ResponseEntity.badRequest().body("You are trying to insert an existing value  , try another one");
