@@ -33,15 +33,14 @@ public class ProductController {
     private final ImageService imageService;
     private final ProductService productService;
     private ProductValidator productValidator;
-
+    private String baseUrl="";
 
     public ProductController(ImageService imageService, ProductService productService,ProductValidator productValidator) {
         this.imageService = imageService;
         this.productService = productService;
-
         this.productValidator = productValidator;
     }
-    
+
 
         @InitBinder("product") // add this parameter to apply this binder only to request parameters with this name
     protected void bidValidator(WebDataBinder binder) {
@@ -53,11 +52,10 @@ public class ProductController {
     @ApiOperation(value = "Create product image",notes = "this endpoint return image url",response = String.class)
     public Callable<ResponseEntity<String>> UploadProductImage(@RequestParam("image") MultipartFile file){
 
-        String burl =ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
       return   ()->{
              String url;
             try {
-                url = burl+"/uploadingDir/"+this.imageService.CreateImage(file);
+                url = getBaseUrl()+"/uploadingDir/"+this.imageService.CreateImage(file);
             } catch (IOException e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
@@ -68,24 +66,28 @@ public class ProductController {
     @PostMapping("/products/v2")
     @ApiOperation(value = "Add new product",notes = "This endpoint bind a category to created product based on category name ," +
             "and it  also create image url based on the file name",response = Product.class)
-    @RestResource // this is needed to be exported to documentation
     public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product){
         System.out.printf("add prod");
-        Product prod = productService.addProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
+        Product prod = productService.addProduct(product,getBaseUrl());
         return ResponseEntity.created(URI.create("/api/products/"+product.getId())).body(prod);
     }
     @PutMapping("/products/v2")
     @ApiOperation(value = "update product",notes = "This endpoint  bind a category to updated product based on category name ," +
             "and it  also create image url based on the file name",response = Product.class)
-    @RestResource // this is needed to be exported to documentation
     public ResponseEntity<?> updateProduct(@Valid @RequestBody Product product){
         System.out.printf("update prod");
-        Optional<Product> updatedProduct =productService.updateProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
+        Optional<Product> updatedProduct =productService.updateProduct(product,getBaseUrl());
       if(updatedProduct.isEmpty())
           return ResponseEntity.badRequest().body("Product not found");
 
         return ResponseEntity.ok(updatedProduct.get());
     }
 
+public String getBaseUrl(){
+  if(baseUrl.isEmpty())
+    baseUrl =ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+    return baseUrl;
+
+}
 
 }
