@@ -2,8 +2,7 @@ package com.adnanbk.ecommerceang.Controllers;
 
 import com.adnanbk.ecommerceang.dto.ApiError;
 import com.adnanbk.ecommerceang.dto.ResponseError;
-import net.minidev.json.JSONUtil;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,35 +22,22 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler({ ConstraintViolationException.class })
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleConstraintViolation0(
-            ConstraintViolationException ex) {
 
-        Set<String> errors = generateErrors(ex);
-
-        return ResponseEntity.badRequest().body(errors);
-    }
-
-    @ExceptionHandler({ PersistenceException.class})
+    @ExceptionHandler({ PersistenceException.class,ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleConstraintViolation(
-            PersistenceException ex) {
+            RuntimeException ex) {
         System.out.println("******persistence exceptio******");
-        if(ex.getCause() instanceof ConstraintViolationException)
+        if(NestedExceptionUtils.getRootCause(ex)  instanceof ConstraintViolationException)
         {
-            ConstraintViolationException cause = (ConstraintViolationException) ex.getCause();
+            ConstraintViolationException cause = (ConstraintViolationException) NestedExceptionUtils.getRootCause(ex);
             Set<String> errors  = generateErrors(cause);
             return ResponseEntity.badRequest().body(errors);
         }
-
-        if(ex.getCause() instanceof SQLIntegrityConstraintViolationException)
+         if(NestedExceptionUtils.getRootCause(ex) instanceof SQLIntegrityConstraintViolationException)
         {
-
             return ResponseEntity.badRequest().body("You are trying to insert an existing value  , try another one");
-
         }
-
         return ResponseEntity.badRequest().body("An error has been thrown during database modification ");
     }
 
@@ -62,8 +48,6 @@ public class ControllerAdvice {
 
             MethodArgumentNotValidException ex) {
         Set<Object> errors = new HashSet<>();
-
-
         ex.getBindingResult().getFieldErrors().forEach(
                         er->
                         errors.add(new ResponseError(er.getField(),er.getDefaultMessage()))
