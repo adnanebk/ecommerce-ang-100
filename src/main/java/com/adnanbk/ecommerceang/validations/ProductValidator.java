@@ -13,6 +13,7 @@ public class ProductValidator implements Validator {
 
     private ProductRepository productRepository;
 
+
     public ProductValidator(ProductRepository productRepository) {
 
         this.productRepository = productRepository;
@@ -26,31 +27,24 @@ public class ProductValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
        Product product = (Product) o;
+       boolean isNameExist,isSkuExist;
        if(product.getName().isEmpty() || product.getSku().isEmpty())
            return;
         if(product.getId()!=0) // when the product updated
         {
-            boolean isNameExist =productRepository.existsByIdNotAndName(product.getId(),product.getName());
-            boolean isSkuExist =productRepository.existsByIdNotAndSkuIs(product.getId(),product.getSku());
-
-            if(isNameExist)
-                errors.reject("Name already exists");
-
-            if(isSkuExist)
-                errors.reject( "Sku already exists");
+             isNameExist =productRepository.existsByIdNotAndName(product.getId(),product.getName());
+             isSkuExist =productRepository.existsByIdNotAndSkuIs(product.getId(),product.getSku());
         }
-        else
+        else // when the product added
         {
-            boolean isNameExist = productRepository.existsByName(product.getName());
-            boolean isSkuExist =  productRepository.existsBySku(product.getSku());
-
-            if(isNameExist)
-                errors.reject("Name already exists");
-
-            if(isSkuExist)
-                errors.reject( "Sku already exists");
+             isNameExist = productRepository.existsByName(product.getName());
+             isSkuExist =  productRepository.existsBySku(product.getSku());
         }
+        if(isNameExist)
+            errors.reject("Name already exists");
 
+        if(isSkuExist)
+            errors.reject( "Sku already exists");
 
 
     }
