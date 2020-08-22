@@ -25,14 +25,34 @@ public class ProductValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
-        Product product = (Product) o;
-       boolean isNameExist = productRepository.existsByIdAndNameIsNot(product.getId(),product.getName());
-       boolean isSkuExist =  productRepository.existsByIdAndSkuIsNot(product.getId(),product.getSku());
+       Product product = (Product) o;
+       if(product.getName().isEmpty() || product.getSku().isEmpty())
+           return;
+        if(product.getId()!=0) // when the product updated
+        {
+            boolean isNameExist =productRepository.existsByIdNotAndName(product.getId(),product.getName());
+            boolean isSkuExist =productRepository.existsByIdNotAndSkuIs(product.getId(),product.getSku());
 
-       if(isNameExist)
-           errors.reject("Name already exists");
+            if(isNameExist)
+                errors.reject("Name already exists");
 
-        if(isSkuExist)
-            errors.reject( "Sku already exists");
+            if(isSkuExist)
+                errors.reject( "Sku already exists");
+        }
+        else
+        {
+            boolean isNameExist = productRepository.existsByName(product.getName());
+            boolean isSkuExist =  productRepository.existsBySku(product.getSku());
+
+            if(isNameExist)
+                errors.reject("Name already exists");
+
+            if(isSkuExist)
+                errors.reject( "Sku already exists");
+        }
+
+
+
     }
+
 }

@@ -6,6 +6,7 @@ import com.adnanbk.ecommerceang.reposetories.ProductRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +41,7 @@ public class ProductServiceImp implements ProductService {
     @Override
     @CacheEvict(value = {"byCategory","byId","byCategoryAndName","byName","allPro"},allEntries = true)
     public Product addProduct(Product product, String baseUrl) {
+        System.out.println("prod id ****"+product.getId());
         if(!product.getCategoryName().isEmpty())
         {
             var cat = categoryRepo.findByCategoryName(product.getCategoryName());
@@ -47,6 +49,7 @@ public class ProductServiceImp implements ProductService {
         }
         if(!product.getImageUrl().isEmpty())
         product.setImageUrl(baseUrl+"/uploadingDir/"+product.getImageUrl());
+        System.out.printf("save prodd add ");
         return productRepo.save(product);
     }
 

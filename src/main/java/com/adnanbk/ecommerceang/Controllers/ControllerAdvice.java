@@ -2,6 +2,7 @@ package com.adnanbk.ecommerceang.Controllers;
 
 import com.adnanbk.ecommerceang.dto.ApiError;
 import com.adnanbk.ecommerceang.dto.ResponseError;
+import net.minidev.json.JSONUtil;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,20 +27,7 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleConstraintViolation0(
             ConstraintViolationException ex) {
-       if(ex.getConstraintViolations().size()>0)
-       {
-           Set<ResponseError> errors = new HashSet<>();
 
-           for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
-               errors.add(new ResponseError(violation.getPropertyPath().toString(),violation.getMessage()));
-
-           }
-
-
-           ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
-
-           return new  ResponseEntity(apiError, apiError.getStatus());
-       }
         Set<String> errors = generateErrors(ex);
 
         return ResponseEntity.badRequest().body(errors);
@@ -49,7 +37,7 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleConstraintViolation(
             PersistenceException ex) {
-
+        System.out.println("******persistence exceptio******");
         if(ex.getCause() instanceof ConstraintViolationException)
         {
             ConstraintViolationException cause = (ConstraintViolationException) ex.getCause();
@@ -71,20 +59,23 @@ public class ControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValid(
+
             MethodArgumentNotValidException ex) {
-        Set<Object> errors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.toSet());
+        Set<Object> errors = new HashSet<>();
 
-        ex.getBindingResult().getGlobalErrors().stream()
+
+        ex.getBindingResult().getFieldErrors().forEach(
+                        er->
+                        errors.add(new ResponseError(er.getField(),er.getDefaultMessage()))
+        );
+
+        ex.getBindingResult().getGlobalErrors()
                 .forEach(x -> {
-                    if(x.getCode().toLowerCase().contains("password"))
-                        errors.add(new ResponseError("confirmPassword",x.getDefaultMessage()));
-
+                    if(x.getDefaultMessage()!=null)
+                        errors.add(new ResponseError(Objects.requireNonNull(x.getCode()),x.getDefaultMessage()));
+                          else
+                           errors.add(x.getCode());
                 });
-
         // body.put("errors", errors);
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Try to fix these errors", errors);
         return new  ResponseEntity(apiError,HttpStatus.BAD_REQUEST);

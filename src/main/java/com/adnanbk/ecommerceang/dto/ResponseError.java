@@ -1,6 +1,7 @@
 package com.adnanbk.ecommerceang.dto;
 
 import lombok.Data;
+import org.springframework.util.StringUtils;
 
 @Data
 public class ResponseError {
@@ -29,8 +30,7 @@ public class ResponseError {
             }
             this.name= name.toString().toLowerCase();
         }
-
-        this.fieldName = fieldName;
+        this.fieldName =  StringUtils.uncapitalize(fieldName);
         this.message = message;
     }
 }

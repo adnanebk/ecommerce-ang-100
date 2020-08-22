@@ -21,12 +21,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean existsBySku(String sku);
 
     @Query("select count(p)>0 from Product p where p.Id != ?1 and  p.name = ?2")
-    boolean existsByIdAndNameIsNot(long id,String name);
+    boolean existsByIdNotAndName(long id,String name);
 
     boolean existsByName(String name);
 
     @Query("select count(p)>0 from Product p where p.Id != ?1 and  p.sku = ?2")
-    boolean existsByIdAndSkuIsNot(long id,String sku);
+    boolean existsByIdNotAndSkuIs(long id,String sku);
 
 
     @RestResource(path="byCategory")

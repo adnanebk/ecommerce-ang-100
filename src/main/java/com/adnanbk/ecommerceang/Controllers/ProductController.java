@@ -3,10 +3,14 @@ package com.adnanbk.ecommerceang.Controllers;
 import com.adnanbk.ecommerceang.models.*;
 import com.adnanbk.ecommerceang.services.ImageService;
 import com.adnanbk.ecommerceang.services.ProductService;
+import com.adnanbk.ecommerceang.validations.ProductValidator;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -14,7 +18,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.*;
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 
@@ -26,16 +32,22 @@ public class ProductController {
 
     private final ImageService imageService;
     private final ProductService productService;
+    private ProductValidator productValidator;
 
-    public ProductController(ImageService imageService, ProductService productService) {
+
+    public ProductController(ImageService imageService, ProductService productService,ProductValidator productValidator) {
         this.imageService = imageService;
         this.productService = productService;
+
+        this.productValidator = productValidator;
     }
     
-    /*    @InitBinder("product") // add this parameter to apply this binder only to request parameters with this name
+
+        @InitBinder("product") // add this parameter to apply this binder only to request parameters with this name
     protected void bidValidator(WebDataBinder binder) {
-        binder.addValidators(productValidator);
-    }*/
+            binder.addValidators(productValidator);
+    }
+
 
     @PostMapping(value = "/products/images")
     @ApiOperation(value = "Create product image",notes = "this endpoint return image url",response = String.class)
@@ -58,7 +70,8 @@ public class ProductController {
             "and it  also create image url based on the file name",response = Product.class)
     @RestResource // this is needed to be exported to documentation
     public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product){
-       Product prod = productService.addProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
+        System.out.printf("add prod");
+        Product prod = productService.addProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
         return ResponseEntity.created(URI.create("/api/products/"+product.getId())).body(prod);
     }
     @PutMapping("/products/v2")
@@ -66,6 +79,7 @@ public class ProductController {
             "and it  also create image url based on the file name",response = Product.class)
     @RestResource // this is needed to be exported to documentation
     public ResponseEntity<?> updateProduct(@Valid @RequestBody Product product){
+        System.out.printf("update prod");
         Optional<Product> updatedProduct =productService.updateProduct(product,ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString());
       if(updatedProduct.isEmpty())
           return ResponseEntity.badRequest().body("Product not found");

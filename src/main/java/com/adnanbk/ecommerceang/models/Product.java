@@ -19,16 +19,14 @@ import java.util.Objects;
 @Data
 public class Product {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long Id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id")
     @JsonIgnore
-    @NotNull
+    @NotNull(message = "{error.notEmpty}")
     private ProductCategory category;
 
     @Transient
@@ -43,7 +41,7 @@ public class Product {
     @NotEmpty
     private String sku;
 
-    @Column(name = "name")
+    @Column(name = "name",unique = true)
     @NotEmpty
     private String name;
 
