@@ -27,7 +27,8 @@ import java.util.concurrent.Callable;
 
 
 @CrossOrigin
-@RepositoryRestController
+@RestController
+@RequestMapping("/api")
 public class ProductController {
 
     private final ImageService imageService;
@@ -64,7 +65,7 @@ public class ProductController {
 
     }
     @PostMapping("/products/v2")
-    @ApiOperation(value = "Add new product",notes = "This endpoint bind a category to created product based on category name ," +
+    @ApiOperation(value = "Add new product",notes = "This endpoint created a product and bind category based on category name ," +
             "and it  also create image url based on the file name",response = Product.class)
     public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product){
         System.out.printf("add prod");
@@ -72,7 +73,7 @@ public class ProductController {
         return ResponseEntity.created(URI.create("/api/products/"+product.getId())).body(prod);
     }
     @PutMapping("/products/v2")
-    @ApiOperation(value = "update product",notes = "This endpoint  bind a category to updated product based on category name ," +
+    @ApiOperation(value = "update product",notes = "This endpoint updated a product and bind category based on category name ," +
             "and it  also create image url based on the file name",response = Product.class)
     public ResponseEntity<?> updateProduct(@Valid @RequestBody Product product){
         System.out.printf("update prod");

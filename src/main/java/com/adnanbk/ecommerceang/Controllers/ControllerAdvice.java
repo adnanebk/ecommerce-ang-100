@@ -2,6 +2,7 @@ package com.adnanbk.ecommerceang.Controllers;
 
 import com.adnanbk.ecommerceang.dto.ApiError;
 import com.adnanbk.ecommerceang.dto.ResponseError;
+import com.adnanbk.ecommerceang.models.Product;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.persistence.PersistenceException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashSet;
 import java.util.Objects;
@@ -23,11 +25,16 @@ import java.util.stream.Collectors;
 public class ControllerAdvice {
 
 
-    @ExceptionHandler({ PersistenceException.class})
+    @ExceptionHandler({ PersistenceException.class,ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleConstraintViolation(
             RuntimeException ex) {
         System.out.println("******persistence exceptio******");
+        if(ex  instanceof ConstraintViolationException)
+        {
+            ConstraintViolationException cause = (ConstraintViolationException) ex;
+            return ResponseEntity.badRequest().body(generateErrors(cause));
+        }
         if(NestedExceptionUtils.getRootCause(ex)  instanceof ConstraintViolationException)
         {
             ConstraintViolationException cause = (ConstraintViolationException) NestedExceptionUtils.getRootCause(ex);
@@ -48,6 +55,20 @@ public class ControllerAdvice {
 
             MethodArgumentNotValidException ex) {
         Set<Object> errors = new HashSet<>();
+        if(ex.getBindingResult().getObjectName().equalsIgnoreCase(Product.class.getSimpleName()))
+        {
+            if(ex.getBindingResult().hasFieldErrors())
+            ex.getBindingResult().getFieldErrors().forEach(
+                    er-> errors.add(new ResponseError(er.getField(),er.getDefaultMessage()).toString())
+            );
+            else
+            ex.getBindingResult().getAllErrors().forEach(
+                    er-> errors.add(er.getCode())
+            );
+            ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Try to fix these errors", errors);
+            return new  ResponseEntity(apiError,HttpStatus.BAD_REQUEST);
+
+        }
         ex.getBindingResult().getFieldErrors().forEach(
                         er->
                         errors.add(new ResponseError(er.getField(),er.getDefaultMessage()))
@@ -65,6 +86,12 @@ public class ControllerAdvice {
         return new  ResponseEntity(apiError,HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<?> handleValidationException(ValidationException ex) {
+        Set<Object> errors = Set.of(ex.getMessage());
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Try to fix these errors", errors);
+        return new  ResponseEntity(apiError,HttpStatus.BAD_REQUEST);
+    }
     private Set<String> generateErrors(ConstraintViolationException cause) {
         Set<String> errors = new HashSet<>();
         for (ConstraintViolation<?> violation : cause.getConstraintViolations()) {

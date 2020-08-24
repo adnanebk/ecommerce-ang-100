@@ -26,8 +26,9 @@ import java.security.Principal;
 import java.util.*;
 
 
-@RepositoryRestController
+@RestController
 @CrossOrigin
+@RequestMapping("/api")
 public class OrderController {
 
 
@@ -56,7 +57,6 @@ public class OrderController {
 
     @GetMapping("/userOrders/byUserName/{userName}")
     @ApiOperation(value = "get orders by username",notes = "this endpoint returns all orders of the specified user name including the order items ")
-    @RestResource
     public ResponseEntity<Iterable<UserOrder>> getOrders(@PathVariable String userName){
     var ll = orderRepository.findByAppUserUserName(userName);
         return ResponseEntity.ok(ll);
@@ -71,18 +71,5 @@ public class OrderController {
         return new ResponseEntity(orderRepository.save(userOrder),HttpStatus.CREATED);
     }
 
-    @ExceptionHandler({ ConstraintViolationException.class })
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleConstraintViolation(
-            ConstraintViolationException ex) {
-
-            Set<ResponseError> errors = new HashSet<>();
-            for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
-                errors.add(new ResponseError(violation.getPropertyPath().toString(),violation.getMessage()));
-            }
-            ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
-            return new  ResponseEntity(apiError, apiError.getStatus());
-
-    }
 
 }

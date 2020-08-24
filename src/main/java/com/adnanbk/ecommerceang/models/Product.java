@@ -1,11 +1,13 @@
 package com.adnanbk.ecommerceang.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -17,6 +19,7 @@ import java.util.Objects;
 @Entity
 @Table(name="product")
 @Data
+@JsonIgnoreProperties(value = {"dateCreated","lastUpdated"}, allowGetters = true)
 public class Product {
 
     @Id
@@ -26,16 +29,11 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     @JsonIgnore
-    @NotNull(message = "{error.notEmpty}")
     private ProductCategory category;
 
     @Transient
     private String categoryName;
 
-
-/*    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;*/
 
     @Column(name = "sku",unique = true)
     @NotEmpty
@@ -86,9 +84,9 @@ public class Product {
     }
 
     public String getCategoryName() {
-        if ((categoryName!=null && !categoryName.isEmpty()))
+        if ((getCategory()!=null))
+            this.categoryName = category.getCategoryName();
         return categoryName;
-        return category.getCategoryName();
     }
 
 
