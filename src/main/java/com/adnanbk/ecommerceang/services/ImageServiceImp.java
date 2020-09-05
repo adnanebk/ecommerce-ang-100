@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 public class ImageServiceImp implements ImageService {
 
 
-    private ResourceLoader resourceLoader;
+    private final ResourceLoader resourceLoader;
 
    @Autowired
     public ImageServiceImp(ResourceLoader resourceLoader) {

@@ -12,6 +12,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -53,9 +54,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @RestResource(path="byDate")
     Page<Product> findAllByDateCreated(Date date, Pageable pageable);
 
+
+   // List<Product> findAllById(List<Long> longList);
+
     @Override
     @RestResource(exported = false)
     <S extends Product> S save(S s);
+
 
 
     @Override

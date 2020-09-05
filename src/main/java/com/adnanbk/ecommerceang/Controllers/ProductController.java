@@ -19,6 +19,7 @@ import javax.validation.*;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -60,12 +61,12 @@ public class ProductController {
             } catch (IOException e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
-            return ResponseEntity.ok(url);
+          return ResponseEntity.created(URI.create(url)).body(url);
         };
 
     }
     @PostMapping("/products/v2")
-    @ApiOperation(value = "Add new product",notes = "This endpoint created a product and bind category based on category name ," +
+    @ApiOperation(value = "Add new product",notes = "This endpoint creates a product and bind its category based on category name ," +
             "and it  also create image url based on the file name",response = Product.class)
     public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product){
         System.out.printf("add prod");
@@ -73,7 +74,7 @@ public class ProductController {
         return ResponseEntity.created(URI.create("/api/products/"+product.getId())).body(prod);
     }
     @PutMapping("/products/v2")
-    @ApiOperation(value = "update product",notes = "This endpoint updated a product and bind category based on category name ," +
+    @ApiOperation(value = "update product",notes = "This endpoint updates a product and bind its category based on category name ," +
             "and it  also create image url based on the file name",response = Product.class)
     public ResponseEntity<?> updateProduct(@Valid @RequestBody Product product){
         System.out.printf("update prod");
@@ -83,6 +84,25 @@ public class ProductController {
 
         return ResponseEntity.ok(updatedProduct.get());
     }
+
+
+    @PutMapping("/products/v3")
+    @ApiOperation(value = "update products",notes = "This endpoint updates  products and bind their categories by using bulk update ," +
+            "and it  also create image url based on the file name",response = Product.class)
+    public ResponseEntity<?> updateProducts(@Valid @RequestBody List<Product> products){
+          List<Product> updatedProducts =productService.updateProducts(products,getBaseUrl());
+        if(updatedProducts.isEmpty())
+            return ResponseEntity.badRequest().body("Products not found");
+
+        return ResponseEntity.ok(updatedProducts);
+    }
+     @DeleteMapping("/products/v3")
+     public ResponseEntity<?> removeProducts(@RequestParam List<Long> Ids)
+     {
+         if  (!Ids.isEmpty())
+         productService.removeProducts(Ids);
+         return ResponseEntity.noContent().build();
+     }
 
 public String getBaseUrl(){
   if(baseUrl.isEmpty())

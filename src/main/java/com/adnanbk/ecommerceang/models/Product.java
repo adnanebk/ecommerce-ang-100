@@ -93,13 +93,12 @@ public class Product {
 
     public void setFromProduct(Product product) {
         this.categoryName=product.categoryName;
+        this.imageUrl=product.imageUrl;
         this.sku = product.sku;
         this.name = product.name;
         this.description = product.description;
         this.unitPrice = product.unitPrice;
         this.active = product.active;
         this.unitsInStock = product.unitsInStock;
-        this.dateCreated = product.dateCreated;
-        this.lastUpdated = product.lastUpdated;
     }
 }
