@@ -64,6 +64,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
     @Override
-    @CacheEvict(value = {"byCategory","byId","byCategoryAndName","byName","allPro"},allEntries = true)
+    @CacheEvict(value = {"byCategory","byId","byCategoryAndName","byName","allPro"},key = "#product.id")
     void delete(Product product);
 }
