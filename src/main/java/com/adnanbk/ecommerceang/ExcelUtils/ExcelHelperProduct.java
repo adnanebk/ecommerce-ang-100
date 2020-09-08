@@ -1,7 +1,6 @@
 package com.adnanbk.ecommerceang.ExcelUtils;
 
 import com.adnanbk.ecommerceang.models.Product;
-import org.apache.commons.collections4.IteratorUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
@@ -15,7 +14,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,7 +21,7 @@ import java.util.List;
 @Component
 public class ExcelHelperProduct implements ExcelHelperI<Product> {
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    static String[] HEADERs ={ "Id", "Name", "Description", "Sku","Price","Quantity",
+    static String[] HEADERS ={ "Id", "Name", "Description", "Sku","Price","Quantity",
                                "Category name","Active","Image url","Created date","Updated date"};
 
     static String SHEET = "Products";
@@ -61,36 +59,20 @@ public class ExcelHelperProduct implements ExcelHelperI<Product> {
                         continue;
                     try {
                     switch (i) {
-                        case 0:
-                            if(currentCell.getCellType().equals(CellType.NUMERIC))
+
+                        case 0 -> {
+                            if (currentCell.getCellType().equals(CellType.NUMERIC))
                                 product.setId((long) currentCell.getNumericCellValue());
-                            break;
-                        case 1:
-                            product.setName(currentCell.getStringCellValue());
-                            break;
-                        case 2:
-                            product.setDescription(currentCell.getStringCellValue());
-                            break;
-                        case 3:
-                            product.setSku(currentCell.getStringCellValue());
-                            break;
-                        case 4:
-                            product.setUnitPrice(BigDecimal.valueOf(currentCell.getNumericCellValue()));
-                            break;
-                        case 5:
-                            product.setUnitsInStock((int) currentCell.getNumericCellValue());
-                            break;
-                        case 6:
-                            product.setCategoryName(currentCell.getStringCellValue());
-                            break;
-                        case 7:
-                            product.setActive(currentCell.getBooleanCellValue());
-                            break;
-                        case 8:
-                            product.setImageUrl(currentCell.getStringCellValue());
-                            break;
-                        default:
-                            break;
+                        }
+                        case 1 -> product.setName(currentCell.getStringCellValue());
+                        case 2 -> product.setDescription(currentCell.getStringCellValue());
+                        case 3 -> product.setSku(currentCell.getStringCellValue());
+                        case 4 -> product.setUnitPrice(BigDecimal.valueOf(currentCell.getNumericCellValue()));
+
+                        case 5 -> product.setUnitsInStock((int) currentCell.getNumericCellValue());
+                        case 6 -> product.setCategoryName(currentCell.getStringCellValue());
+                        case 7 -> product.setActive(currentCell.getBooleanCellValue());
+                        case 8 -> product.setImageUrl(currentCell.getStringCellValue());
                     }
                 } catch (IllegalStateException ex){
                         throw new ValidationException("fail to load data from Excel file: , check if you are using valid data with correct orders");
@@ -122,9 +104,9 @@ public class ExcelHelperProduct implements ExcelHelperI<Product> {
             // Header
             Row headerRow = sheet.createRow(0);
 
-            for (int col = 0; col < HEADERs.length; col++) {
+            for (int col = 0; col < HEADERS.length; col++) {
                 Cell cell = headerRow.createCell(col);
-                cell.setCellValue(HEADERs[col]);
+                cell.setCellValue(HEADERS[col]);
             }
 
             int rowIdx = 1;
