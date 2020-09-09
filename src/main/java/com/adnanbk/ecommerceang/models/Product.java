@@ -1,6 +1,5 @@
 package com.adnanbk.ecommerceang.models;
 
-import com.adnanbk.ecommerceang.ExcelUtils.DisplayName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -8,11 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
@@ -42,7 +38,6 @@ public class Product {
 
     @Column(name = "name",unique = true)
     @NotEmpty
-    @DisplayName("Name")
     private String name;
 
     @Column(name = "description")
