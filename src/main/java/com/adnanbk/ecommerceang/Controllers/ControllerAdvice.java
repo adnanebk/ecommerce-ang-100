@@ -30,7 +30,7 @@ public class ControllerAdvice {
     public ResponseEntity<Object> handleConstraintViolation(
             RuntimeException ex) {
         System.out.println("******persistence exceptio******");
-        if(ex  instanceof ConstraintViolationException)
+        if(ex  instanceof ConstraintViolationException )
         {
             ConstraintViolationException cause = (ConstraintViolationException) ex;
             return ResponseEntity.badRequest().body(generateErrors(cause));
@@ -52,23 +52,9 @@ public class ControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValid(
-
             MethodArgumentNotValidException ex) {
         Set<Object> errors = new HashSet<>();
-        if(ex.getBindingResult().getObjectName().equalsIgnoreCase(Product.class.getSimpleName()))
-        {
-            if(ex.getBindingResult().hasFieldErrors())
-            ex.getBindingResult().getFieldErrors().forEach(
-                    er-> errors.add(new ResponseError(er.getField(),er.getDefaultMessage()).toString())
-            );
-            else
-            ex.getBindingResult().getAllErrors().forEach(
-                    er-> errors.add(er.getCode())
-            );
-            ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Try to fix these errors", errors);
-            return new  ResponseEntity(apiError,HttpStatus.BAD_REQUEST);
 
-        }
         ex.getBindingResult().getFieldErrors().forEach(
                         er->
                         errors.add(new ResponseError(er.getField(),er.getDefaultMessage()))
@@ -83,14 +69,14 @@ public class ControllerAdvice {
                 });
         // body.put("errors", errors);
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Try to fix these errors", errors);
-        return new  ResponseEntity(apiError,HttpStatus.BAD_REQUEST);
+        return   ResponseEntity.badRequest().body(apiError);
     }
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<?> handleValidationException(ValidationException ex) {
         Set<Object> errors = Set.of(ex.getMessage());
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Try to fix these errors", errors);
-        return new  ResponseEntity(apiError,HttpStatus.BAD_REQUEST);
+        return   ResponseEntity.badRequest().body(apiError);
     }
     private Set<String> generateErrors(ConstraintViolationException cause) {
         Set<String> errors = new HashSet<>();

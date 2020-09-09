@@ -41,10 +41,10 @@ public class ProductValidator implements Validator {
              isSkuExist =  productRepository.existsBySku(product.getSku());
         }
         if(isNameExist)
-            errors.reject("Name already exists");
+            errors.reject("name"," already exists");
 
         if(isSkuExist)
-            errors.reject( "Sku already exists");
+            errors.reject( "sku","already exists");
 
 
     }
