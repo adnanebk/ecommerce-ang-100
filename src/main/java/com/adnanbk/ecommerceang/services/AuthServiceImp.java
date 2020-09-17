@@ -6,6 +6,7 @@ import com.adnanbk.ecommerceang.dto.LoginUserDto;
 import com.adnanbk.ecommerceang.dto.RegisterUserDto;
 import com.adnanbk.ecommerceang.models.AppUser;
 import com.adnanbk.ecommerceang.reposetories.UserRepo;
+import org.apache.commons.collections4.map.HashedMap;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class AuthServiceImp implements AuthService {
@@ -54,7 +58,8 @@ public class AuthServiceImp implements AuthService {
 
         }
 
-        final String token = jwtTokenUtil.generateToken(appUser.getUserName());
+
+        final String token = jwtTokenUtil.generateToken(appUser.getUserName(),generateClaims(currentUser));
         RegisterUserDto registerUserDto = new RegisterUserDto();
         BeanUtils.copyProperties(currentUser,registerUserDto);
         return new JwtResponse(token,registerUserDto);
@@ -64,9 +69,16 @@ public class AuthServiceImp implements AuthService {
     {
         user.setPassword(passwordEncode.encode(user.getPassword()));
         user= userRepo.save(user);
-        String token = this.jwtTokenUtil.generateToken(user.getUserName());
+        String token = this.jwtTokenUtil.generateToken(user.getUserName(),generateClaims(user));
         RegisterUserDto registerUserDto = new RegisterUserDto();
         BeanUtils.copyProperties(user,registerUserDto);
       return   new JwtResponse(token,registerUserDto);
     }
+
+   private HashMap<String,Object> generateClaims(AppUser appUser){
+       var claims =new HashMap<String,Object>();
+       claims.put("email",appUser.getEmail());
+
+       return claims;
+   };
 }

@@ -27,13 +27,11 @@ import java.util.Arrays;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final JwtUserDetailsService userDetailsService;
-    private final JwtTokenUtil jwtTokenUtil;
-    private Filter jwtAuthorizationFilter;
+    private final Filter jwtAuthorizationFilter;
 
 
-    public SecurityConfiguration(JwtUserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil,Filter jwtAuthorizationFilter) {
+    public SecurityConfiguration(JwtUserDetailsService userDetailsService,Filter jwtAuthorizationFilter) {
         this.userDetailsService = userDetailsService;
-        this.jwtTokenUtil = jwtTokenUtil;
         this.jwtAuthorizationFilter = jwtAuthorizationFilter;
     }
 

@@ -11,10 +11,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 @Component
@@ -66,15 +68,9 @@ public class JwtTokenUtil implements Serializable{
 
 
 	//generate token for user
-	public String generateToken(String username)  {
-		//final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-		//final UserDetails userDetails = use(username);
-		Map<String, Object> claims = new HashMap<>();
-		//claims.put("user",this.userDetailsService.GetCurrentUser());
-		//claims.put("email",userDetailsService.GetCurrentUser().getEmail());
-		//claims.put("photo",fileSystemStorageService.loadAsResource(userDetailsService.GetCurrentuser().getPhoto()).getURL());
-		//String url=fileSystemStorageService.loadFromCloudinary(userDetailsService.GetCurrentuser().getPhoto());
-		//claims.put("photoUrl",url);
+	public String generateToken(String username, HashMap<String,Object> claims)  {
+		if(claims==null)
+			claims =new HashMap<>();
 		return doGenerateToken(claims, username);
 	}
 
