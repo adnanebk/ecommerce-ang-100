@@ -20,6 +20,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.Filter;
 import java.util.Arrays;
 
 @EnableWebSecurity
@@ -27,11 +28,13 @@ import java.util.Arrays;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final JwtUserDetailsService userDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
+    private Filter jwtAuthorizationFilter;
 
 
-    public SecurityConfiguration(JwtUserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil) {
+    public SecurityConfiguration(JwtUserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil,Filter jwtAuthorizationFilter) {
         this.userDetailsService = userDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
     }
 
 
@@ -50,7 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 //http.oauth2Login();
 
                 //.addFilter(new JWTAuthenticationFilter(authenticationManager(),jwtTokenUtil))
-                 http.addFilterBefore(new JwtAuthorizationFilter(jwtTokenUtil), UsernamePasswordAuthenticationFilter.class)
+                 http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
     protected @Override void configure(AuthenticationManagerBuilder auth) throws Exception {

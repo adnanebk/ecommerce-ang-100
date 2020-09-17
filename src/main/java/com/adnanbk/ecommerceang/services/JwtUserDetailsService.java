@@ -2,6 +2,7 @@ package com.adnanbk.ecommerceang.services;
 
 import com.adnanbk.ecommerceang.models.AppUser;
 import com.adnanbk.ecommerceang.reposetories.UserRepo;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 
 
 @Service
+@Primary
 public class JwtUserDetailsService implements UserDetailsService {
 
 	private final UserRepo userRepo;
