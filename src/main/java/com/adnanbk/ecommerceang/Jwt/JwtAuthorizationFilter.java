@@ -21,9 +21,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
 
 	private final JwtTokenUtil jwtTokenUtil;
-
-	public JwtAuthorizationFilter(JwtTokenUtil jwtTokenUtil) {
+	private final UserDetailsService userDetailsService;
+	public JwtAuthorizationFilter(JwtTokenUtil jwtTokenUtil, UserDetailsService userDetailsService) {
 		this.jwtTokenUtil = jwtTokenUtil;
+		this.userDetailsService = userDetailsService;
 	}
 
 	@Override
@@ -56,12 +57,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 		// Once we get the token validate it.
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
+			UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 			// if token is valid return the user details from the database
-			UserDetails userDetails = jwtTokenUtil.validateToken(jwtToken, username);
+			boolean isTokenValid = jwtTokenUtil.validateToken(jwtToken, username);
 
 			// authentication
 
-			if (userDetails!=null) {
+			if (isTokenValid) {
 
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());

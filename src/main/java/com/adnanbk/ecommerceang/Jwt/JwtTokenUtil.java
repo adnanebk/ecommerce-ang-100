@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 @Component
-public class JwtTokenUtil implements Serializable{
+public class JwtTokenUtil{
 
 	private static final long serialVersionUID = -2550185165626007488L;
 
@@ -29,13 +29,6 @@ public class JwtTokenUtil implements Serializable{
 
 	@Value("${jwt.secret}")
 	private String secret;
-	private final UserDetailsService userDetailsService;
-
-
-	public JwtTokenUtil(UserDetailsService userDetailsService) {
-
-		this.userDetailsService = userDetailsService;
-	}
 
 	public Date getIssuedAtDateFromToken(String token) {
 		return getClaimFromToken(token, Claims::getIssuedAt);
@@ -91,14 +84,9 @@ public class JwtTokenUtil implements Serializable{
 //		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 //	}
 	//validate token
-	public UserDetails validateToken(String token, String username) {
-		UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-		if(userDetails==null)
-			return null;
+	public boolean validateToken(String token, String username) {
 		final String usernameInToken = getUsernameFromToken(token);
-		if (usernameInToken.equals(userDetails.getUsername()) && !isTokenExpired(token))
-			return userDetails;
-		return null;
+		return usernameInToken.equals(username) && !isTokenExpired(token);
 	}
 	private Boolean ignoreTokenExpiration(String token) {
 		// here you specify tokens, for that the expiration is ignored
