@@ -4,6 +4,7 @@ import com.adnanbk.ecommerceang.dto.ApiError;
 import com.adnanbk.ecommerceang.dto.ResponseError;
 import com.adnanbk.ecommerceang.models.Product;
 import org.springframework.core.NestedExceptionUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,7 +28,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler({ PersistenceException.class,ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleConstraintViolation(
+    public ResponseEntity<?> handleConstraintViolation(
             RuntimeException ex) {
         System.out.println("******persistence exceptio******");
         if(ex  instanceof ConstraintViolationException )
@@ -43,6 +44,9 @@ public class ControllerAdvice {
         
          if(NestedExceptionUtils.getRootCause(ex) instanceof SQLIntegrityConstraintViolationException)
         {
+            return ResponseEntity.badRequest().body("You are trying to insert an existing value  , try another one");
+        }
+        if(ex  instanceof DataIntegrityViolationException) {
             return ResponseEntity.badRequest().body("You are trying to insert an existing value  , try another one");
         }
         return ResponseEntity.badRequest().body("An error has been thrown during database modification ");
