@@ -25,7 +25,7 @@ public class ExcelHelperProduct implements ExcelHelperI<Product> {
                                "Category name","Active","Image url","Created date","Updated date"};
 
     static String SHEET = "Products";
-    private List<Product> products=new ArrayList<>();
+    private final List<Product> products=new ArrayList<>();
 
     @Override
     public  boolean hasExcelFormat(MultipartFile file) {
@@ -53,10 +53,12 @@ public class ExcelHelperProduct implements ExcelHelperI<Product> {
                 if(currentRow.getPhysicalNumberOfCells()<=0)
                     continue;
                 Product product =new Product();
+                boolean isRowExist=false;
                 for(int i=0; i<currentRow.getLastCellNum(); i++) {
                     var currentCell = currentRow.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
                     if(currentCell==null)
                         continue;
+                    isRowExist=true;
                     try {
                     switch (i) {
 
@@ -82,7 +84,7 @@ public class ExcelHelperProduct implements ExcelHelperI<Product> {
                 }
 
 
-
+                if(isRowExist)
                 products.add(product);
             }
 

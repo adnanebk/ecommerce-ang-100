@@ -8,17 +8,15 @@ import com.adnanbk.ecommerceang.reposetories.ProductRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import javax.validation.ValidationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ProductServiceImp implements ProductService {
@@ -62,15 +60,18 @@ public class ProductServiceImp implements ProductService {
     @Override
     @CachePut(value = {"byCategory","byId","byCategoryAndName","byName","allPro"})
     public List<Product> updateProducts(List<Product> products, String baseUrl) {
+        var updatedProducts = findAndMapProducts(products, baseUrl);
+        return productRepo.saveAll(updatedProducts.collect(Collectors.toList()));
+    }
 
-        var updatedProducts =  productRepo.findAllById(products.stream()
+    private Stream<Product> findAndMapProducts(List<Product> products, String baseUrl) {
+        return productRepo.findAllById(products.stream()
                 .map(Product::getId).collect(Collectors.toList()))
                 .stream().map(prod -> {
-          var product = products.stream().filter(p->p.getId()==prod.getId()).findFirst();
-           mapProduct(product.get(),baseUrl,prod);
-            return prod;
-        });
-        return productRepo.saveAll(updatedProducts.collect(Collectors.toList()));
+                    var product = products.stream().filter(p -> p.getId() == prod.getId()).findFirst();
+                    mapProduct(product.get(), baseUrl, prod);
+                    return prod;
+                });
     }
 
     @Override
@@ -92,11 +93,12 @@ public class ProductServiceImp implements ProductService {
     }
 
     @CachePut(value = {"byCategory","byId","byCategoryAndName","byName","allPro"})
-    public List<Product> saveAllFromExcel(MultipartFile multipartFile){
+    public List<Product> saveAllFromExcel(MultipartFile multipartFile, String baseUrl){
         try {
             List<Product> products = excelHelper.excelToList(multipartFile.getInputStream());
+          var savedProducts =  findAndMapProducts(products,baseUrl);
            if(!products.isEmpty())
-            return productRepo.saveAll(products);
+            return productRepo.saveAll(savedProducts.collect(Collectors.toList()));
            else
                throw new ValidationException("We can't process the file");
 

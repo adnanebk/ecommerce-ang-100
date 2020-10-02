@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.util.List;
 
 public interface ExcelHelperI<T> {
-
     boolean hasExcelFormat(MultipartFile file);
 
     List<T> excelToList(InputStream is);
