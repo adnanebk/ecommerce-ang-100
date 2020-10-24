@@ -77,7 +77,10 @@ public class ProductController {
     public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product){
         System.out.printf("add prod");
         Product prod = productService.addProduct(product,getBaseUrl());
-        return ResponseEntity.created(URI.create("/api/products/"+product.getId())).body(prod);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+			.buildAndExpand(prod.getId()).toUri();
+
+        return ResponseEntity.created(URI.create(location).body(prod);
     }
     @PutMapping("/products/v2")
     @ApiOperation(value = "update product",notes = "This endpoint updates a product and bind its category based on category name"
