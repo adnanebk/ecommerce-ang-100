@@ -67,8 +67,11 @@ public class OrderController {
     public ResponseEntity<UserOrder> saveOrder(@Valid @RequestBody UserOrder userOrder, Principal principal){
         AppUser appUser =userRepo.findByUserName(principal.getName());
         userOrder.setAppUser(appUser);
-       userOrder.setUserOrderItems(orderItemRepo.saveAll(userOrder.getOrderItems()));
-        return new ResponseEntity(orderRepository.save(userOrder),HttpStatus.CREATED);
+        userOrder.setUserOrderItems(orderItemRepo.saveAll(userOrder.getOrderItems()));
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+			.buildAndExpand(userOrder.getId()).toUri();
+
+        return ResponseEntity.created(URI.create(location).body(userOrder));
     }
 
 
