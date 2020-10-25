@@ -50,9 +50,9 @@ public class ProductController {
     }
 
 
-        @InitBinder("product") // add this parameter to apply this binder only to request parameters with this name
+    @InitBinder("product") // add this parameter to apply this binder only to request parameters with this name
     protected void bidValidator(WebDataBinder binder) {
-            binder.addValidators(productValidator);
+        binder.addValidators(productValidator);
     }
 
 
@@ -60,14 +60,14 @@ public class ProductController {
     @ApiOperation(value = "Create product image",notes = "this endpoint return image url",response = String.class)
     public Callable<ResponseEntity<String>> UploadProductImage(@RequestParam("image") MultipartFile file){
 
-      return   ()->{
-             String url;
+        return   ()->{
+            String url;
             try {
                 url = getBaseUrl()+"/uploadingDir/"+this.imageService.CreateImage(file);
             } catch (IOException e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
-          return ResponseEntity.created(URI.create(url)).body(url);
+            return ResponseEntity.created(URI.create(url)).body(url);
         };
 
     }
@@ -78,9 +78,9 @@ public class ProductController {
         System.out.printf("add prod");
         Product prod = productService.addProduct(product,getBaseUrl());
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-			.buildAndExpand(prod.getId()).toUri();
+                .buildAndExpand(prod.getId()).toUri();
 
-        return ResponseEntity.created(URI.create(location).body(prod);
+        return ResponseEntity.created(location).body(prod);
     }
     @PutMapping("/products/v2")
     @ApiOperation(value = "update product",notes = "This endpoint updates a product and bind its category based on category name"
@@ -88,8 +88,8 @@ public class ProductController {
     public ResponseEntity<?> updateProduct(@Valid @RequestBody Product product){
         System.out.printf("update prod");
         Optional<Product> updatedProduct =productService.updateProduct(product,getBaseUrl());
-      if(updatedProduct.isEmpty())
-          return ResponseEntity.badRequest().body("Product not found");
+        if(updatedProduct.isEmpty())
+            return ResponseEntity.badRequest().body("Product not found");
 
         return ResponseEntity.ok(updatedProduct.get());
     }
@@ -98,20 +98,20 @@ public class ProductController {
     @PutMapping("/products/v3")
     @ApiOperation(value = "update products",notes = "This endpoint updates  products and bind their categories by using bulk update ")
     public ResponseEntity<?> updateProducts(@Valid @RequestBody List<Product> products){
-          List<Product> updatedProducts =productService.updateProducts(products,getBaseUrl());
+        List<Product> updatedProducts =productService.updateProducts(products,getBaseUrl());
         if(updatedProducts.isEmpty())
             return ResponseEntity.badRequest().body("Products not found");
 
         return ResponseEntity.ok(updatedProducts);
     }
-     @DeleteMapping("/products/v3")
-     @ApiOperation(value = "remove list of products")
-     public ResponseEntity<?> removeProducts(@RequestParam List<Long> Ids)
-     {
-         if  (!Ids.isEmpty())
-         productService.removeProducts(Ids);
-         return ResponseEntity.noContent().build();
-     }
+    @DeleteMapping("/products/v3")
+    @ApiOperation(value = "remove list of products")
+    public ResponseEntity<?> removeProducts(@RequestParam List<Long> Ids)
+    {
+        if  (!Ids.isEmpty())
+            productService.removeProducts(Ids);
+        return ResponseEntity.noContent().build();
+    }
     @PostMapping("/products/excel")
     @ApiOperation(value = "add products from excel file",notes = "you have to download an excel file and fill it")
     public Callable<ResponseEntity<List<Product>>> addProductsFromExcel(MultipartFile file)
@@ -123,19 +123,19 @@ public class ProductController {
     @ApiOperation(value = "download excel file of products")
     public Callable<ResponseEntity<?>> loadProducts(@RequestParam(required = false) List<Long> Ids)
     {
-      return   ()->{
-        String filename = "products-"+ LocalDate.now()+".xlsx";
-        InputStreamResource file = new InputStreamResource(productService.loadToExcel(Ids));
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
-                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
-                .body(file);   };
-      }
+        return   ()->{
+            String filename = "products-"+ LocalDate.now()+".xlsx";
+            InputStreamResource file = new InputStreamResource(productService.loadToExcel(Ids));
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                    .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                    .body(file);   };
+    }
 
-public String getBaseUrl(){
-  if(baseUrl.isEmpty())
-    baseUrl =ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-    return baseUrl;
-}
+    public String getBaseUrl(){
+        if(baseUrl.isEmpty())
+            baseUrl =ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        return baseUrl;
+    }
 
 }
