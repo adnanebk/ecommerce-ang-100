@@ -16,12 +16,14 @@ import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.PersistenceException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import java.net.URI;
 import java.security.Principal;
 import java.util.*;
 
@@ -51,14 +53,13 @@ public class OrderController {
        o.setFirstName("a");
        o.setLastName("aa@aa");
        orderRepository.save(o);
-
        System.out.println("ok");
     }*/
 
     @GetMapping("/userOrders/byUserName/{userName}")
     @ApiOperation(value = "get orders by username",notes = "this endpoint returns all orders of the specified user name including the order items ")
     public ResponseEntity<Iterable<UserOrder>> getOrders(@PathVariable String userName){
-    var ll = orderRepository.findByAppUserUserName(userName);
+        var ll = orderRepository.findByAppUserUserName(userName);
         return ResponseEntity.ok(ll);
     }
 
@@ -69,9 +70,9 @@ public class OrderController {
         userOrder.setAppUser(appUser);
         userOrder.setUserOrderItems(orderItemRepo.saveAll(userOrder.getOrderItems()));
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-			.buildAndExpand(userOrder.getId()).toUri();
+                .buildAndExpand(userOrder.getId()).toUri();
 
-        return ResponseEntity.created(URI.create(location).body(userOrder));
+        return ResponseEntity.created(location).body(userOrder);
     }
 
 
