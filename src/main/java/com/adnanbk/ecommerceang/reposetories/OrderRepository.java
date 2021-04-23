@@ -20,7 +20,7 @@ public interface OrderRepository extends CrudRepository<UserOrder, Integer> {
 
 
     @RestResource(path="byUserName")
-   List<UserOrder> findByAppUserUserName(String userName);
+   List<UserOrder> findByAppUser_UserName(String userName);
 
 
 }

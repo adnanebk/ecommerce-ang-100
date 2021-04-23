@@ -6,6 +6,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
@@ -14,6 +15,7 @@ import java.util.*;
 
 @SpringBootApplication
 @EnableCaching
+@EnableAsync
 public class EcommerceAngApplication   {
 
 
@@ -26,7 +28,7 @@ public class EcommerceAngApplication   {
     }
     @Bean
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("byId","byCategory","byCategoryAndName","byName","allPro");
+        return new ConcurrentMapCacheManager("allPro","byProId");
     }
 /*
     @Bean

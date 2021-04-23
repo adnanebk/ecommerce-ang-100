@@ -1,11 +1,8 @@
-package com.adnanbk.ecommerceang.ExcelUtils;
-
-import com.adnanbk.ecommerceang.models.Product;
+package com.adnanbk.ecommerceang.Utils;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 

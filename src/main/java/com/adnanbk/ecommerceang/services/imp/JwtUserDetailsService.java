@@ -1,4 +1,4 @@
-package com.adnanbk.ecommerceang.services;
+package com.adnanbk.ecommerceang.services.imp;
 
 import com.adnanbk.ecommerceang.models.AppUser;
 import com.adnanbk.ecommerceang.reposetories.UserRepo;

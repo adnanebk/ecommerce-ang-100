@@ -37,26 +37,21 @@ public class AuthController {
 
     @PostMapping(value = "/register")
     @ApiOperation(value = "register new user",response =JwtResponse.class )
-    public ResponseEntity<?> create( @RequestBody @Valid AppUser user)   {
-
-       JwtResponse jwtResponse= authService.handleRegister(user);
-        return new ResponseEntity(jwtResponse,HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public JwtResponse create( @RequestBody @Valid AppUser user)   {
+        return  authService.handleRegister(user);
 
     }
     @PostMapping("/login")
-    @ApiOperation(value = "Login the user",response =JwtResponse.class )
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginUserDto appUser) {
+    public JwtResponse authenticateUser(@RequestBody LoginUserDto appUser) {
 
 
 try {
-    JwtResponse jwtResponse = authService.handleLogin(appUser);
-    return new ResponseEntity(jwtResponse,HttpStatus.OK);
-
+    return authService.handleLogin(appUser);
 }
 catch (BadCredentialsException e)
 {
     throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
-
 }
 
 

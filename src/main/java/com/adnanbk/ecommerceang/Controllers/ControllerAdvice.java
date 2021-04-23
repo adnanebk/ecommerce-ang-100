@@ -28,35 +28,42 @@ public class ControllerAdvice {
 
     @ExceptionHandler({ PersistenceException.class,ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<?> handleConstraintViolation(
-            RuntimeException ex) {
-        System.out.println("******persistence exceptio******");
-        if(ex  instanceof ConstraintViolationException )
-        {
-            ConstraintViolationException cause = (ConstraintViolationException) ex;
+    public ResponseEntity<?> handleConstraintViolation(RuntimeException ex) {
+        System.out.println("******persistence exception******");
+        if(ex  instanceof ConstraintViolationException  cause)
+
             return ResponseEntity.badRequest().body(generateErrors(cause));
-        }
-        if(NestedExceptionUtils.getRootCause(ex)  instanceof ConstraintViolationException)
-        {
-            ConstraintViolationException cause = (ConstraintViolationException) NestedExceptionUtils.getRootCause(ex);
+
+        if(NestedExceptionUtils.getRootCause(ex)  instanceof ConstraintViolationException cause)
+
             return ResponseEntity.badRequest().body(generateErrors(cause));
-        }
+
         
-         if(NestedExceptionUtils.getRootCause(ex) instanceof SQLIntegrityConstraintViolationException)
+         if(NestedExceptionUtils.getRootCause(ex) instanceof SQLIntegrityConstraintViolationException cause)
         {
-            return ResponseEntity.badRequest().body("You are trying to insert an existing value  , try another one");
+            return returnUniqueErrorMessage(cause);
         }
-        if(ex  instanceof DataIntegrityViolationException) {
-            return ResponseEntity.badRequest().body("You are trying to insert an existing value  , try another one");
+        if(ex  instanceof DataIntegrityViolationException cause) {
+
+            return returnUniqueErrorMessage(cause);
         }
         return ResponseEntity.badRequest().body("An error has been thrown during database modification ");
     }
 
+    private ResponseEntity<String> returnUniqueErrorMessage(Exception cause) {
+        String message= cause.getMessage().toLowerCase();
+        if(message.contains("product(name)"))
+            return ResponseEntity.badRequest().body("product name already exists");
+        if(message.contains("product(sku)"))
+            return ResponseEntity.badRequest().body("product sku already exists");
+        if(message.contains("product_category(name)"))
+            return ResponseEntity.badRequest().body("category name already exists");
+        return ResponseEntity.badRequest().body("An error has been thrown during database modification");
+    }
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex) {
+    public ResponseEntity<?> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         Set<Object> errors = new HashSet<>();
 
         ex.getBindingResult().getFieldErrors().forEach(

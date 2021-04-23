@@ -1,7 +1,5 @@
 package com.adnanbk.ecommerceang.models;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -9,34 +7,24 @@ import java.util.Set;
 
 @Entity
 @Table(name="product_category")
-// @Data -- known bug
-@Getter
-@Setter
+@Data
 public class ProductCategory {
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long Id;
+    private Long id;
 
-    @Column(name = "category_name",unique = true)
+    @Column(name = "name",unique = true)
     @Length(min = 2,message = "{error.min}")
-    private String categoryName;
+    private String name;
 
     @OneToMany( mappedBy = "category",orphanRemoval = true,cascade = CascadeType.ALL)
     private Set<Product> products;
 
 
-public void addProduct(Product product){
-    products.add(product);
-  product.setCategory(this);
-}
 
-    public void removeProduct(Product product){
-        products.remove(product);
-        product.setCategory(null);
-    }
 
 
 }

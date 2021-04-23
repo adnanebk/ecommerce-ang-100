@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    Optional<Product> updateProduct(Product product, String baseUrl);
+    Product updateProduct(Product product, String baseUrl);
 
     Product addProduct(Product product, String baseUrl);
 
@@ -18,4 +18,6 @@ public interface ProductService {
     void removeProducts(List<Long> productsIds);
     ByteArrayInputStream loadToExcel(List<Long> productsIds);
    List<Product> saveAllFromExcel(MultipartFile multipartFile, String baseUrl);
+
+    List<Product> searchProducts(String query);
 }

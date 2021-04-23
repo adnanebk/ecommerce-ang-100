@@ -1,4 +1,4 @@
-package com.adnanbk.ecommerceang.ExcelUtils;
+package com.adnanbk.ecommerceang.Utils;
 
 import com.adnanbk.ecommerceang.models.Product;
 import org.apache.poi.ss.usermodel.*;
@@ -21,8 +21,8 @@ import java.util.List;
 @Component
 public class ExcelHelperProduct implements ExcelHelperI<Product> {
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    static String[] HEADERS ={ "Id", "Name", "Description", "Sku","Price","Quantity",
-                               "Category name","Active","Image url","Created date","Updated date"};
+    static String[] HEADERS ={ "Name", "Description", "Sku","Price","Quantity",
+                               "Category name","Active","Image url"};
 
     static String SHEET = "Products";
     private final List<Product> products=new ArrayList<>();
@@ -62,19 +62,16 @@ public class ExcelHelperProduct implements ExcelHelperI<Product> {
                     try {
                     switch (i) {
 
-                        case 0 -> {
-                            if (currentCell.getCellType().equals(CellType.NUMERIC))
-                                product.setId((long) currentCell.getNumericCellValue());
-                        }
-                        case 1 -> product.setName(currentCell.getStringCellValue());
-                        case 2 -> product.setDescription(currentCell.getStringCellValue());
-                        case 3 -> product.setSku(currentCell.getStringCellValue());
-                        case 4 -> product.setUnitPrice(BigDecimal.valueOf(currentCell.getNumericCellValue()));
 
-                        case 5 -> product.setUnitsInStock((int) currentCell.getNumericCellValue());
-                        case 6 -> product.setCategoryName(currentCell.getStringCellValue());
-                        case 7 -> product.setActive(currentCell.getBooleanCellValue());
-                        case 8 -> product.setImageUrl(currentCell.getStringCellValue());
+                        case 0 -> product.setName(currentCell.getStringCellValue());
+                        case 1 -> product.setDescription(currentCell.getStringCellValue());
+                        case 2 -> product.setSku(currentCell.getStringCellValue());
+                        case 3 -> product.setUnitPrice(BigDecimal.valueOf(currentCell.getNumericCellValue()));
+
+                        case 4 -> product.setUnitsInStock((int) currentCell.getNumericCellValue());
+                        case 5 -> product.setCategoryName(currentCell.getStringCellValue());
+                        case 6 -> product.setActive(currentCell.getBooleanCellValue());
+                        case 7 -> product.setImage(currentCell.getStringCellValue());
                     }
                 } catch (IllegalStateException ex){
                         throw new ValidationException("fail to load data from Excel file: , check if you are using valid data with correct orders");
@@ -115,17 +112,14 @@ public class ExcelHelperProduct implements ExcelHelperI<Product> {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             for (Product product : products) {
                 Row row = sheet.createRow(rowIdx++);
-                row.createCell(0).setCellValue(product.getId());
-                row.createCell(1).setCellValue(product.getName());
-                row.createCell(2).setCellValue(product.getDescription());
-                row.createCell(3).setCellValue(product.getSku());
-                row.createCell(4).setCellValue(product.getUnitPrice().doubleValue());
-                row.createCell(5).setCellValue(product.getUnitsInStock());
-                row.createCell(6).setCellValue(product.getCategoryName());
-                row.createCell(7).setCellValue(product.isActive());
-                row.createCell(8).setCellValue(product.getImageUrl());
-                row.createCell(9).setCellValue(format.format(product.getDateCreated()));
-                row.createCell(10).setCellValue(product.getLastUpdated());
+                row.createCell(0).setCellValue(product.getName());
+                row.createCell(1).setCellValue(product.getDescription());
+                row.createCell(2).setCellValue(product.getSku());
+                row.createCell(3).setCellValue(product.getUnitPrice().doubleValue());
+                row.createCell(4).setCellValue(product.getUnitsInStock());
+                row.createCell(5).setCellValue(product.getCategoryName());
+                row.createCell(6).setCellValue(product.isActive());
+                row.createCell(7).setCellValue(product.getImage());
             }
 
             workbook.write(out);

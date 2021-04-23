@@ -16,8 +16,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 import java.util.Collections;
 
 @Configuration
-@EnableSwagger2
-@Import(SpringDataRestConfiguration.class)
 public class SwaggerConfig {
 
     @Bean

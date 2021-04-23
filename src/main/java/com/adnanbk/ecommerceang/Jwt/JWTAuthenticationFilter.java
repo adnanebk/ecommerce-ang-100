@@ -2,7 +2,7 @@
 package com.adnanbk.ecommerceang.Jwt;
 
 import com.adnanbk.ecommerceang.entity.AppUser;
-import com.adnanbk.ecommerceang.security.SecurityConfiguration;
+import com.adnanbk.ecommerceang.config.SecurityConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.http.HttpHeaders;

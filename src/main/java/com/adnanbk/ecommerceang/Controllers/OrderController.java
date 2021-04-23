@@ -1,31 +1,19 @@
 package com.adnanbk.ecommerceang.Controllers;
 
-import com.adnanbk.ecommerceang.dto.ApiError;
 import com.adnanbk.ecommerceang.models.AppUser;
-import com.adnanbk.ecommerceang.dto.ResponseError;
-import com.adnanbk.ecommerceang.models.OrderItem;
 import com.adnanbk.ecommerceang.models.UserOrder;
 import com.adnanbk.ecommerceang.reposetories.OrderItemRepo;
 import com.adnanbk.ecommerceang.reposetories.OrderRepository;
 import com.adnanbk.ecommerceang.reposetories.UserRepo;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.data.rest.core.annotation.RestResource;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.persistence.PersistenceException;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
 import java.net.URI;
 import java.security.Principal;
-import java.util.*;
 
 
 @RestController
@@ -57,10 +45,11 @@ public class OrderController {
     }*/
 
     @GetMapping("/userOrders/byUserName/{userName}")
-    @ApiOperation(value = "get orders by username",notes = "this endpoint returns all orders of the specified user name including the order items ")
+    @ApiOperation(value = "get orders by username",notes = "this endpoint returns all orders of the specified username including the order items ")
     public ResponseEntity<Iterable<UserOrder>> getOrders(@PathVariable String userName){
-        var ll = orderRepository.findByAppUserUserName(userName);
-        return ResponseEntity.ok(ll);
+        var ls=orderRepository.findAll();
+        var userOrders = orderRepository.findByAppUser_UserName(userName);
+        return ResponseEntity.ok(userOrders);
     }
 
 
@@ -72,7 +61,7 @@ public class OrderController {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(userOrder.getId()).toUri();
 
-        return ResponseEntity.created(location).body(userOrder);
+        return ResponseEntity.created(location).body(orderRepository.save(userOrder));
     }
 
 

@@ -1,4 +1,4 @@
-package com.adnanbk.ecommerceang.services;
+package com.adnanbk.ecommerceang.services.imp;
 
 import com.adnanbk.ecommerceang.Jwt.JwtTokenUtil;
 import com.adnanbk.ecommerceang.dto.JwtResponse;
@@ -6,6 +6,7 @@ import com.adnanbk.ecommerceang.dto.LoginUserDto;
 import com.adnanbk.ecommerceang.dto.RegisterUserDto;
 import com.adnanbk.ecommerceang.models.AppUser;
 import com.adnanbk.ecommerceang.reposetories.UserRepo;
+import com.adnanbk.ecommerceang.services.AuthService;
 import org.apache.commons.collections4.map.HashedMap;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,8 +41,7 @@ public class AuthServiceImp implements AuthService {
     public JwtResponse handleLogin(LoginUserDto appUser){
       var currentUser  = userRepo.findByUserName(appUser.getUserName());
        if (currentUser==null) {
-            throw new BadCredentialsException("Invalid username");
-
+            throw new BadCredentialsException("Invalid username or password");
         }
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(appUser.getUserName(), appUser.getPassword());
@@ -49,12 +49,10 @@ public class AuthServiceImp implements AuthService {
         try {
             Authentication authentication = authenticationManager.authenticate(authRequest);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (DisabledException e) {
-            System.out.printf("");
         }
         catch (BadCredentialsException e) {
 
-            throw new BadCredentialsException("Invalid password");
+            throw new BadCredentialsException("Invalid username or password");
 
         }
 

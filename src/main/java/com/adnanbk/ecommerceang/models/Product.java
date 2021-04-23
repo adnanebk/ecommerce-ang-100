@@ -8,7 +8,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
@@ -21,14 +24,15 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     @JsonIgnore
     private ProductCategory category;
 
-    @Transient
+    @NotEmpty
+    @org.springframework.data.annotation.Transient
     private String categoryName;
 
 
@@ -40,22 +44,24 @@ public class Product {
     @NotEmpty
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description",length = 500)
     @Length(min = 10,message = "{error.min}")
     private String description;
 
     @Column(name = "unit_price")
+    @DecimalMin("0.0")
     private BigDecimal unitPrice;
 
-    @Column(name = "image_url")
-    @NotEmpty
-    private String imageUrl;
+    @Column(name = "image")
+    @NotEmpty(message = "{error.upload}")
+    private String image;
 
     @Column(name = "active")
     private boolean active;
 
     @Column(name = "units_in_stock")
-    private int unitsInStock;
+    @Min(value = 0)
+    private Integer unitsInStock;
 
     @Column(name = "date_created")
     @CreationTimestamp
@@ -71,23 +77,23 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Id.equals(product.Id);
+        return id.equals(product.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Id);
+        return Objects.hash(id);
     }
 
     public String getCategoryName() {
         if ((getCategory()!=null))
-            this.categoryName = category.getCategoryName();
+            this.categoryName = category.getName();
         return categoryName;
     }
 
     public void setFromProduct(Product product) {
         this.categoryName=product.categoryName;
-        this.imageUrl=product.imageUrl;
+        this.image =product.image;
         this.sku = product.sku;
         this.name = product.name;
         this.description = product.description;

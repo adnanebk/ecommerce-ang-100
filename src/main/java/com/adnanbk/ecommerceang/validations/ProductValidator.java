@@ -1,8 +1,8 @@
+/*
 package com.adnanbk.ecommerceang.validations;
 
 import com.adnanbk.ecommerceang.models.Product;
 import com.adnanbk.ecommerceang.reposetories.ProductRepository;
-import com.adnanbk.ecommerceang.services.ProductService;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -50,3 +50,4 @@ public class ProductValidator implements Validator {
     }
 
 }
+*/
