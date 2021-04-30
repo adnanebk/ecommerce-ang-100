@@ -5,6 +5,7 @@ import com.adnanbk.ecommerceang.validations.UniqueUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,7 +17,16 @@ import java.util.Set;
 @Data
 @JsonIgnoreProperties(value = {"id"}, allowSetters = true)
 @ConfirmPassword
+@NoArgsConstructor
 public class AppUser {
+	public AppUser(String userName, String email, String firstName, String lastName, String password) {
+		this.userName = userName;
+		this.email = email;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.password = password;
+		this.confirmPassword = password;
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
