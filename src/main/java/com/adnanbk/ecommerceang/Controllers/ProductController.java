@@ -112,12 +112,8 @@ public class ProductController {
     @ApiOperation(value = "add products from excel file",notes = "you have to download an excel file and fill it")
     public Callable<ResponseEntity<List<Product>>> addProductsFromExcel(MultipartFile file)
     {
-        try {
             List<Product> products = productService.saveAllFromExcel(file, baseUrl);
             return ()-> new ResponseEntity(products,HttpStatus.CREATED);
-        }catch (ValidationException ex){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,ex.getMessage());
-        }
     }
 
     @GetMapping("/products/excel")

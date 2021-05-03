@@ -19,15 +19,6 @@ import java.util.Set;
 @ConfirmPassword
 @NoArgsConstructor
 public class AppUser {
-	public AppUser(String userName, String email, String firstName, String lastName, String password) {
-		this.userName = userName;
-		this.email = email;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.password = password;
-		this.confirmPassword = password;
-	}
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -37,10 +28,9 @@ public class AppUser {
 	@NotEmpty
 	private String userName;
 
-
-
 	@Column
 	@Email
+	@NotEmpty
 	private String email;
 
 	@Column
@@ -69,6 +59,15 @@ public class AppUser {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "appUser",orphanRemoval = true)
 	@JsonIgnore
 	private Set<UserOrder> userOrders;
+
+	public AppUser(String userName, String email, String firstName, String lastName, String password) {
+		this.userName = userName;
+		this.email = email;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.password = password;
+		this.confirmPassword = password;
+	}
 
 	public void addOrder(UserOrder order){
 

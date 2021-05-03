@@ -7,6 +7,7 @@ import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -34,12 +35,17 @@ public class ControllerAdvice {
 
             return ResponseEntity.badRequest().body(generateErrors(cause));
 
-        if(NestedExceptionUtils.getRootCause(ex)  instanceof ConstraintViolationException cause)
+        if(NestedExceptionUtils.getRootCause(ex)  instanceof ConstraintViolationException cause) {
+            for (var constr : cause.getConstraintViolations()) {
+                String property="";
+                if (constr.getPropertyPath() != null)
+                    property=constr.getPropertyPath().toString();
 
-            return ResponseEntity.badRequest().body(generateErrors(cause));
+                    return ResponseEntity.badRequest().body(new RuntimeException(property+" "+constr.getMessage()));
 
-        
-         if(NestedExceptionUtils.getRootCause(ex) instanceof SQLIntegrityConstraintViolationException cause)
+            }
+        }
+        if(NestedExceptionUtils.getRootCause(ex) instanceof SQLIntegrityConstraintViolationException cause)
         {
             return returnUniqueErrorMessage(cause);
         }
@@ -50,15 +56,19 @@ public class ControllerAdvice {
         return ResponseEntity.badRequest().body("An error has been thrown during database modification ");
     }
 
-    private ResponseEntity<String> returnUniqueErrorMessage(Exception cause) {
+    private ResponseEntity<?> returnUniqueErrorMessage(Exception cause) {
         String message= cause.getMessage().toLowerCase();
+
         if(message.contains("product(name)"))
-            return ResponseEntity.badRequest().body("product name already exists");
-        if(message.contains("product(sku)"))
-            return ResponseEntity.badRequest().body("product sku already exists");
-        if(message.contains("product_category(name)"))
-            return ResponseEntity.badRequest().body("category name already exists");
-        return ResponseEntity.badRequest().body("An error has been thrown during database modification");
+           message="product name already exists";
+       else if(message.contains("product(sku)"))
+           message="product sku already exists";
+       else if(message.contains("product_category(name)"))
+            message="category name already exists";
+       else
+           message="An error has been thrown during database modification";
+
+        return ResponseEntity.badRequest().body(new RuntimeException(message));
     }
 
 
@@ -71,33 +81,34 @@ public class ControllerAdvice {
                         errors.add(new ResponseError(er.getField(),er.getDefaultMessage()))
         );
 
-        ex.getBindingResult().getGlobalErrors()
+       ex.getBindingResult().getGlobalErrors()
                 .forEach(x -> {
                     if(x.getDefaultMessage()!=null)
                         errors.add(new ResponseError(Objects.requireNonNull(x.getCode()),x.getDefaultMessage()));
                           else
                            errors.add(x.getCode());
                 });
-        // body.put("errors", errors);
+
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Try to fix these errors", errors);
         return   ResponseEntity.badRequest().body(apiError);
     }
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<?> handleValidationException(ValidationException ex) {
-        Set<Object> errors = Set.of(ex.getMessage());
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Try to fix these errors", errors);
-        return   ResponseEntity.badRequest().body(apiError);
+        return   ResponseEntity.badRequest().body(ex);
     }
-    private Set<String> generateErrors(ConstraintViolationException cause) {
-        Set<String> errors = new HashSet<>();
+    private Set<ResponseError> generateErrors(ConstraintViolationException cause) {
+        Set<ResponseError> errors = new HashSet<>();
         for (ConstraintViolation<?> violation : cause.getConstraintViolations()) {
-            String message = violation.getMessage();
-            if(violation.getPropertyPath()!=null)
-                message = new ResponseError(violation.getPropertyPath().toString(),violation.getMessage()).toString();
-            errors.add(message);
+           if(violation.getPropertyPath()!=null)
+               errors.add(new ResponseError(violation.getPropertyPath().toString(),violation.getMessage()));
         }
         return errors;
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> BadCredentialsException(BadCredentialsException ex) {
+        return ResponseEntity.badRequest().body(ex);
     }
 
 }

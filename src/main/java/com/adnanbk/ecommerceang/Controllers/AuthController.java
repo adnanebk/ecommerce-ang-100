@@ -39,38 +39,17 @@ public class AuthController {
     }
     @PostMapping("/login")
     public JwtResponse authenticateUser(@RequestBody LoginUserDto appUser) {
-
-
-        try {
     return authService.handleLogin(appUser);
-}
-catch (BadCredentialsException e)
-{
-    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
-}
-
-
 }
 
 @PostMapping("/google")
 public JwtResponse googleLogin(@RequestBody JwtResponse jwtResponse){
-        try {
             return googleService.verify(jwtResponse);
-        }
-       catch (BadCredentialsException e)
-            {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
-            }
+
 }
     @PostMapping("/facebook")
-    public JwtResponse facebookLogin(@RequestBody JwtResponse jwtResponse){
-        try {
-            return facebookService.verify(jwtResponse);
-        }
-        catch (BadCredentialsException e)
-        {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
-        }
+    public JwtResponse facebookLogin(@RequestBody JwtResponse jwtResponse) {
+        return facebookService.verify(jwtResponse);
     }
 
 }

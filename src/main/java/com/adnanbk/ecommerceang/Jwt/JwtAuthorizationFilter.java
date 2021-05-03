@@ -28,6 +28,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	}
 
 	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+		return !request.getRequestURI().contains("userOrders");
+	}
+
+	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
 		final String requestTokenHeader = request.getHeader("Authorization");

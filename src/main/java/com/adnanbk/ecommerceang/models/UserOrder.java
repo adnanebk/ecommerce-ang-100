@@ -2,20 +2,22 @@ package com.adnanbk.ecommerceang.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@JsonIgnoreProperties(value = {"creditCard"}, allowSetters = true)
 public class UserOrder {
 
     @Id
@@ -31,10 +33,6 @@ public class UserOrder {
     private String lastName;
 
     @NotEmpty
-    @Email
-    private String email;
-
-    @NotEmpty
     private String country;
 
     @NotEmpty
@@ -44,12 +42,13 @@ public class UserOrder {
     @NotEmpty
     private String city;
 
+
     private int quantity;
     private double totalPrice;
 
     @Column(name = "date_created")
     @CreationTimestamp
-    private Date dateCreated;
+    private LocalDate dateCreated;
 
 
 
@@ -68,6 +67,9 @@ public class UserOrder {
     @JsonIgnore
     private AppUser appUser;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_id", nullable = false)
+    private CreditCard creditCard;
 /*    private String country;
 
     private String city;
@@ -81,3 +83,4 @@ public class UserOrder {
 
 
 }
+
