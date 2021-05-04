@@ -25,12 +25,10 @@ public class UserOrder {
     private int id;
 
     @NotEmpty
-    @Length(min = 2,message = "{error.min}")
-    private String firstName;
+    @Length(min = 4,message = "{error.min}")
+    private String fullName;
 
-    @NotEmpty
-    @Length(min = 2,message = "{error.min}")
-    private String lastName;
+
 
     @NotEmpty
     private String country;

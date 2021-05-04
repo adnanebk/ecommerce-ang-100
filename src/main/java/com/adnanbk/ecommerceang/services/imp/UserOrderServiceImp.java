@@ -53,10 +53,12 @@ public class UserOrderServiceImp implements UserOderService {
         if(expirationDate.isBefore(LocalDate.now()))
             throw new ValidationException("your credit card has expired");
         var userCardOptional=creditCardRepo.findByCardNumber(creditCard.getCardNumber());
+        creditCard.setAppUser(appUser);
          var userCard=  userCardOptional.orElse(creditCardRepo.save(creditCard));
         userOrder.setAppUser(appUser);
         userOrder.setCreditCard(userCard);
         userOrder.setUserOrderItems(orderItemRepo.saveAll(userOrder.getOrderItems()));
       return  orderRepository.save(userOrder);
     }
+
 }

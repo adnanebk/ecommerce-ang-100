@@ -45,7 +45,7 @@ public GoogleIdTokenVerifier googleverifier() {
     }
     @Bean
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("allPro","byProId");
+        return new ConcurrentMapCacheManager("allPro","byProId","ordersByUserName","creditCardByUserName");
     }
 /*
     @Bean
@@ -73,11 +73,6 @@ public GoogleIdTokenVerifier googleverifier() {
     public static void main(String[] args) {
 
         SpringApplication.run(EcommerceAngApplication.class, args);
-     /*   Product p =new Product();
-        p.setCategory(productCategoryRepository.findById((long) 1).get());*/
-
-        //orderRepository.save(new Order());
-        System.out.println("");
     }
 
 

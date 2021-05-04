@@ -24,7 +24,8 @@ public class FacebookService implements SocialService {
     private String clientSecret;
     private final String apiInspector ="https://graph.facebook.com/debug_token";
     private UserRepo userRepo;
-
+    @Value("${social.password}")
+    private String password;
     private RestTemplate restTemplate;
     private AuthService authService;
 
@@ -46,12 +47,12 @@ public class FacebookService implements SocialService {
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 if(!userRepo.existsByUserName(user.getUserName())){
-                    AppUser appUser=new AppUser(user.getUserName(),user.getEmail(),user.getFirstName(),user.getLastName(),accessToken);
+                    AppUser appUser=new AppUser(user.getUserName(),user.getEmail(),user.getFirstName(),user.getLastName(),password);
                     return authService.handleRegister(appUser);
                 }
                 else
                 {
-                    LoginUserDto loginUserDto=new LoginUserDto(user.getUserName(),accessToken);
+                    LoginUserDto loginUserDto=new LoginUserDto(user.getUserName(),password);
                     return authService.handleLogin(loginUserDto);
                 }
 
