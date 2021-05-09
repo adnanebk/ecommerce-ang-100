@@ -48,6 +48,7 @@ public class FacebookService implements SocialService {
             if (response.getStatusCode().is2xxSuccessful()) {
                 if(!userRepo.existsByUserName(user.getUserName())){
                     AppUser appUser=new AppUser(user.getUserName(),user.getEmail(),user.getFirstName(),user.getLastName(),password);
+                    appUser.setEnabled(true);
                     return authService.handleRegister(appUser);
                 }
                 else

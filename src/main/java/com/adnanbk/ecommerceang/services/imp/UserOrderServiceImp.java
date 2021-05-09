@@ -9,6 +9,7 @@ import com.adnanbk.ecommerceang.reposetories.OrderRepository;
 import com.adnanbk.ecommerceang.reposetories.UserRepo;
 import com.adnanbk.ecommerceang.services.UserOderService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
@@ -34,11 +35,11 @@ public class UserOrderServiceImp implements UserOderService {
 
     @Override
     public List<UserOrder> findAllByUserName(String userName) {
-        List<UserOrder> userOrders=orderRepository.findByAppUser_UserName(userName);
-       return userOrders;
+        return orderRepository.findByAppUser_UserName(userName);
     }
 
     @Override
+    @Transactional
     public UserOrder saveOrder(UserOrder userOrder, String userName) {
         AppUser appUser =userRepo.findByUserName(userName);
         CreditCard creditCard=userOrder.getCreditCard();

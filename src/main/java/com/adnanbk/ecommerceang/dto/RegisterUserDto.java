@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 
 @Data
 public class RegisterUserDto {
@@ -18,6 +19,9 @@ public class RegisterUserDto {
     private String firstName;
 
     private String lastName;
+
+    private boolean enabled;
+
 
     private String adress;
 

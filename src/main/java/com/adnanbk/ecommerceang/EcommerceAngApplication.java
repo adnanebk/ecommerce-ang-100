@@ -45,7 +45,7 @@ public GoogleIdTokenVerifier googleverifier() {
     }
     @Bean
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("allPro","byProId","ordersByUserName","creditCardByUserName");
+        return new ConcurrentMapCacheManager("allPro","byProId","ordersByUserName","creditCardByUserName","userByUserName");
     }
 /*
     @Bean

@@ -1,16 +1,16 @@
 package com.adnanbk.ecommerceang.services.imp;
 
+import com.adnanbk.ecommerceang.exceptions.UserNotEnabledException;
 import com.adnanbk.ecommerceang.models.AppUser;
 import com.adnanbk.ecommerceang.reposetories.UserRepo;
 import org.springframework.context.annotation.Primary;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 
 @Service
@@ -27,12 +27,12 @@ public class JwtUserDetailsService implements UserDetailsService {
 
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException,UserNotEnabledException {
 		 user = userRepo.findByUserName(username);
 		 if(user==null)
-		 	return null;
-		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),
-                Arrays.asList(new SimpleGrantedAuthority("ROLE-USER")));
+			return null;
+		 return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),
+				Collections.singletonList(new SimpleGrantedAuthority("ROLE-USER")));
 	}
 
 	public AppUser GetCurrentUser(){

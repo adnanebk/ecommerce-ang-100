@@ -8,4 +8,10 @@ public interface AuthService {
     JwtResponse handleLogin(LoginUserDto appUser);
 
     JwtResponse handleRegister(AppUser user);
+
+    boolean verify(String token);
+
+    void sendEmailConfirmation(String user);
+
+    AppUser getUserByUserName(String userName);
 }

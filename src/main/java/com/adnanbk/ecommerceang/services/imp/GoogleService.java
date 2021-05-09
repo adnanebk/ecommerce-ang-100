@@ -49,6 +49,7 @@ public class GoogleService implements SocialService {
        //  GoogleIdToken.Payload payload = idToken.getPayload();
          if(!userRepo.existsByUserName(user.getUserName())){
          AppUser appUser=new AppUser(user.getUserName(),user.getEmail(),user.getFirstName(),user.getLastName(),password);
+            appUser.setEnabled(true);
          return authService.handleRegister(appUser);
          }
          else

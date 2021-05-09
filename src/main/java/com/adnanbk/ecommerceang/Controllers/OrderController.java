@@ -32,18 +32,6 @@ public class OrderController {
 
         this.userOderService = userOderService;
     }
-
-
-/*   @PostConstruct
-    public void postControll(){
-       UserOrder o=new UserOrder();
-       o.setEmail("aa@aa");
-       o.setFirstName("a");
-       o.setLastName("aa@aa");
-       orderRepository.save(o);
-       System.out.println("ok");
-    }*/
-
     @GetMapping("/userOrders/byUserName/{userName}")
     @ApiOperation(value = "get orders by username",notes = "this endpoint returns all orders of the specified username including the order items ")
     public ResponseEntity<Iterable<UserOrder>> getOrders(@PathVariable String userName){
