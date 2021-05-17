@@ -1,6 +1,7 @@
 package com.adnanbk.ecommerceang.Utils;
 
 import com.adnanbk.ecommerceang.models.Product;
+import com.adnanbk.ecommerceang.reposetories.ProductCategoryRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
@@ -22,10 +23,15 @@ import java.util.List;
 public class ExcelHelperProduct implements ExcelHelperI<Product> {
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     static String[] HEADERS ={ "Name", "Description", "Sku","Price","Quantity",
-                               "Category name","Active","Image url"};
+                               "Category","Active","Image url"};
 
     static String SHEET = "Products";
     private final List<Product> products=new ArrayList<>();
+    private ProductCategoryRepository categoryRepo;
+
+    public ExcelHelperProduct(ProductCategoryRepository categoryRepo) {
+        this.categoryRepo = categoryRepo;
+    }
 
     @Override
     public  boolean hasExcelFormat(MultipartFile file) {
@@ -69,7 +75,13 @@ public class ExcelHelperProduct implements ExcelHelperI<Product> {
                         case 3 -> product.setUnitPrice(BigDecimal.valueOf(currentCell.getNumericCellValue()));
 
                         case 4 -> product.setUnitsInStock((int) currentCell.getNumericCellValue());
-                        case 5 -> product.setCategoryName(currentCell.getStringCellValue());
+                        case 5 -> {
+                            var category =categoryRepo.findByNameIgnoreCase(currentCell.getStringCellValue());
+                           if(category==null)
+                               throw new ValidationException("you must choose correct category");
+
+                            product.setCategory(category);
+                        }
                         case 6 -> product.setActive(currentCell.getBooleanCellValue());
                         case 7 -> product.setImage(currentCell.getStringCellValue());
                     }
@@ -117,7 +129,7 @@ public class ExcelHelperProduct implements ExcelHelperI<Product> {
                 row.createCell(2).setCellValue(product.getSku());
                 row.createCell(3).setCellValue(product.getUnitPrice().doubleValue());
                 row.createCell(4).setCellValue(product.getUnitsInStock());
-                row.createCell(5).setCellValue(product.getCategoryName());
+                row.createCell(5).setCellValue(product.getCategory().getName());
                 row.createCell(6).setCellValue(product.isActive());
                 row.createCell(7).setCellValue(product.getImage());
             }

@@ -46,6 +46,7 @@ public class ProductController {
         binder.addValidators(productValidator);
     }*/
 
+
     @GetMapping("/products/searchInAll/{query}")
     public List<Product> searchProducts(@PathVariable(required = false) String query){
         return this.productService.searchProducts(query);
@@ -74,7 +75,7 @@ public class ProductController {
     @ApiOperation(value = "Add new product",notes = "This endpoint creates a product and bind its category based on category name ",
             response = Product.class)
     public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product){
-        Product prod = productService.addProduct(product,getBaseUrl());
+        Product prod = productService.addProduct(product);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(prod.getId()).toUri();
 
@@ -84,23 +85,23 @@ public class ProductController {
     @ApiOperation(value = "update product",notes = "This endpoint updates a product and bind its category based on category name"
             ,response = Product.class)
     public ResponseEntity<?> updateProduct(@Valid @RequestBody Product product){
-        Product updatedProduct =productService.updateProduct(product,getBaseUrl());
+        Product updatedProduct =productService.updateProduct(product);
         if(updatedProduct==null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Products not found");
         return ResponseEntity.ok(updatedProduct);
     }
 
 
-    @PutMapping("/products/v3")
+    @PutMapping("/products/list")
     @ApiOperation(value = "update products",notes = "This endpoint updates  products and bind their categories by using bulk update ")
     public ResponseEntity<?> updateProducts(@Valid @RequestBody List<Product> products){
-        List<Product> updatedProducts =productService.updateProducts(products,getBaseUrl());
+        List<Product> updatedProducts =productService.updateProducts(products);
         if(updatedProducts.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Products not found");
 
         return ResponseEntity.ok(updatedProducts);
     }
-    @DeleteMapping("/products/v3")
+    @DeleteMapping("/products/v2")
     @ApiOperation(value = "remove list of products")
     public ResponseEntity<?> removeProducts(@RequestParam List<Long> Ids)
     {
@@ -129,11 +130,7 @@ public class ProductController {
                     .body(file);   };
     }
 
-    public String getBaseUrl(){
-        if(baseUrl.isEmpty())
-            baseUrl =ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        return baseUrl;
-    }
+
 
 
 

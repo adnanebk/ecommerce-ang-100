@@ -25,7 +25,7 @@ public class EmailSenderService {
     private String name;
     @Value("${spring.mail.email}")
     private String email;
-    @Value("${spring.mail.url}")
+    @Value("${api.url}")
     private String url;
     private ConfirmationTokenRepository confirmationTokenRepo;
 

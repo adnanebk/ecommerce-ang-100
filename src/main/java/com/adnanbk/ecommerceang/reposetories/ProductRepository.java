@@ -1,6 +1,7 @@
 package com.adnanbk.ecommerceang.reposetories;
 
 
+import com.adnanbk.ecommerceang.dto.ProductProjection;
 import com.adnanbk.ecommerceang.models.Product;
 import org.hibernate.annotations.Cache;
 import org.springframework.cache.annotation.CacheEvict;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -20,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@CrossOrigin
+@RepositoryRestResource(excerptProjection = ProductProjection.class)
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     boolean existsBySku(String sku);
@@ -38,9 +40,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     //@Query("select prod from Product as prod where prod.category.Id = ?1")
     Page<Product> findByCategoryId(Long id, Pageable pageable);
 
-    @RestResource(path="byId")
-    @Cacheable("byProId")
-    Optional<Product> findById(Long id);
+
 
 
 

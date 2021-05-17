@@ -1,4 +1,6 @@
 package com.adnanbk.ecommerceang.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -20,8 +22,9 @@ public class ProductCategory {
     @Length(min = 2,message = "{error.min}")
     private String name;
 
-    @OneToMany( mappedBy = "category",orphanRemoval = true,cascade = CascadeType.ALL)
-    private Set<Product> products;
+/*    @OneToMany( mappedBy = "category",orphanRemoval = true,cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Product> products;*/
 
 
 

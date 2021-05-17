@@ -8,10 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
@@ -19,22 +16,16 @@ import java.util.Objects;
 @Entity
 @Table(name="product")
 @Data
-@JsonIgnoreProperties(value = {"dateCreated","lastUpdated"}, allowGetters = true)
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "category_id")
-    @JsonIgnore
+    @NotNull(message = "{error.choose}")
     private ProductCategory category;
-
-    @NotEmpty
-    @org.springframework.data.annotation.Transient
-    private String categoryName;
-
 
     @Column(name = "sku",unique = true)
     @NotEmpty
@@ -72,33 +63,15 @@ public class Product {
     private Date lastUpdated;
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return id.equals(product.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    public String getCategoryName() {
-        if ((getCategory()!=null))
-            this.categoryName = category.getName();
-        return categoryName;
-    }
 
     public void setFromProduct(Product product) {
-        this.categoryName=product.categoryName;
-        this.image =product.image;
-        this.sku = product.sku;
-        this.name = product.name;
-        this.description = product.description;
-        this.unitPrice = product.unitPrice;
-        this.active = product.active;
-        this.unitsInStock = product.unitsInStock;
+        this.setCategory(product.category);
+        this.setImage(product.image);
+        this.setSku(product.sku);
+        this.setName(product.name);
+        this.setDescription(product.description);
+        this.setUnitPrice(product.unitPrice);
+        this.setActive(product.active);
+        this.setUnitsInStock(product.unitsInStock);
     }
 }

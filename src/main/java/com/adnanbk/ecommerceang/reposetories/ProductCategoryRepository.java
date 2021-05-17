@@ -13,6 +13,6 @@ import springfox.documentation.annotations.Cacheable;
 @RepositoryRestResource(collectionResourceRel = "productCategory", path = "product-category")
 public interface ProductCategoryRepository extends CrudRepository<ProductCategory, Long> {
 
-    ProductCategory findByName(String categoryName);
+    ProductCategory findByNameIgnoreCase(String categoryName);
     boolean existsByName(String name);
 }
