@@ -8,7 +8,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface ImageService {
 
-   CompletableFuture<String> CreateImage(MultipartFile multipartFile) throws IOException;
+   CompletableFuture<String> CreateImage(MultipartFile multipartFile) ;
 
    Resource load(String filename);
 }

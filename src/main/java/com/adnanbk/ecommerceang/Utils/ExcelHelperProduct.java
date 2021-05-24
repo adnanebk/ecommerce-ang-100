@@ -1,5 +1,6 @@
 package com.adnanbk.ecommerceang.Utils;
 
+import com.adnanbk.ecommerceang.exceptions.CustomFileException;
 import com.adnanbk.ecommerceang.models.Product;
 import com.adnanbk.ecommerceang.reposetories.ProductCategoryRepository;
 import org.apache.poi.ss.usermodel.*;
@@ -101,7 +102,7 @@ public class ExcelHelperProduct implements ExcelHelperI<Product> {
             this.products.addAll(products);
             return products;
         } catch (IOException e) {
-            throw new ValidationException("fail to parse Excel file: " + e.getMessage());
+            throw new CustomFileException("fail to parse Excel file: " + e.getMessage());
         }
     }
 

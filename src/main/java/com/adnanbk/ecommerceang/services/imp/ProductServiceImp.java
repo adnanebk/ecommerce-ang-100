@@ -1,6 +1,7 @@
 package com.adnanbk.ecommerceang.services.imp;
 
 import com.adnanbk.ecommerceang.Utils.ExcelHelperI;
+import com.adnanbk.ecommerceang.exceptions.CustomFileException;
 import com.adnanbk.ecommerceang.models.Product;
 import com.adnanbk.ecommerceang.reposetories.ProductRepository;
 import com.adnanbk.ecommerceang.services.ProductService;
@@ -9,7 +10,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.ValidationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
@@ -31,7 +31,6 @@ public class ProductServiceImp implements ProductService {
     @Override
     @CacheEvict(value =  "allPro",allEntries = true)
     public Product addProduct(Product product) {
-
            mapProductImage(product);
         return productRepo.save(product);
     }
@@ -65,11 +64,13 @@ public class ProductServiceImp implements ProductService {
                                     .stream().map(this::mapProductImage).toList();
                  if(products.size()>0)
                 return productRepo.saveAll(products);
+            throw new CustomFileException("We can't process the file,please try again");
 
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            throw new CustomFileException("We can't process the file,please try again");
+
         }
-            throw new ValidationException("We can't process the file");
+
     }
 
     @Override

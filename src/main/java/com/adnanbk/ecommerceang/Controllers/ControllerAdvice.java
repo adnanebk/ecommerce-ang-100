@@ -2,15 +2,14 @@ package com.adnanbk.ecommerceang.Controllers;
 
 import com.adnanbk.ecommerceang.dto.ApiError;
 import com.adnanbk.ecommerceang.dto.ResponseError;
+import com.adnanbk.ecommerceang.exceptions.CustomFileException;
 import com.adnanbk.ecommerceang.exceptions.InvalidTokenException;
 import com.adnanbk.ecommerceang.exceptions.UserNotEnabledException;
-import com.adnanbk.ecommerceang.models.Product;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,7 +24,6 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -105,7 +103,10 @@ public class ControllerAdvice {
     public ResponseEntity<?> BadCredentialsException(BadCredentialsException ex) {
         return ResponseEntity.badRequest().body(ex);
     }
-
+    @ExceptionHandler(CustomFileException.class)
+    public ResponseEntity<?> CustomFilException(CustomFileException ex) {
+        return ResponseEntity.badRequest().body(ex);
+    }
     @ExceptionHandler(InvalidTokenException.class)
     @ResponseBody
     public String InvalidTokenException(InvalidTokenException ex) {

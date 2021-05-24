@@ -10,11 +10,13 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api")
@@ -34,12 +36,11 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @GetMapping("/appUsers/{userName}")
-    public ResponseEntity<?> userInfo(@PathVariable String userName){
-        if(userName!=null && !userName.isEmpty())
-           return ResponseEntity.ok().body(authService.getUserByUserName(userName));
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"no access provided");
-
+    @GetMapping("/appUsers/info")
+    public ResponseEntity<?> userInfo(Principal principal){
+        if(principal==null)
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"you have no access");
+           return ResponseEntity.ok().body(authService.getUserByUserName(principal.getName()));
     }
 
     @PostMapping(value = "/register")

@@ -55,12 +55,10 @@ public class ProductController {
     @PostMapping(value = "/products/images",consumes ="multipart/form-data")
     @ApiOperation(value = "Create product image",notes = "this endpoint uploads an image",response = String.class,consumes ="multipart/form-data")
     public CompletableFuture<ResponseEntity<String>> UploadProductImage(@RequestParam("image") MultipartFile file){
-            try {
+
               return  this.imageService.CreateImage(file)
                       .thenApplyAsync((fileName-> ResponseEntity.created(URI.create(fileName)).body(fileName)));
-            } catch (IOException e) {
-                return CompletableFuture.completedFuture(ResponseEntity.badRequest().body(e.getMessage()));
-            }
+
         }
     @GetMapping("/products/images/{filename:.+}")
     @ApiOperation(value = "get product image")
