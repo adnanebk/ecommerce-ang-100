@@ -13,5 +13,4 @@ public interface AuthService {
 
     void sendEmailConfirmation(String user);
 
-    AppUser getUserByUserName(String userName);
 }

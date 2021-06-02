@@ -67,6 +67,8 @@ public class ControllerAdvice {
            message="product sku already exists";
        else if(message.contains("product_category(name)"))
             message="category name already exists";
+       else if(message.contains("credit_card(card_name)"))
+            message="Card name already exists";
        else
            message="An error has been thrown during database modification";
 

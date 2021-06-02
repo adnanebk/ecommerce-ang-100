@@ -51,6 +51,11 @@ public class ImageServiceImp implements ImageService {
         } catch (IOException e) {
             throw new CustomFileException("we Could not write the file, please try again");
         }
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return  CompletableFuture.completedFuture(fileName);
     }
 

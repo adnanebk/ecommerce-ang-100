@@ -16,13 +16,12 @@ import java.util.Set;
 @Entity
 @Table(name = "user")
 @Data
-@JsonIgnoreProperties(value = {"id"}, allowSetters = true)
 @ConfirmPassword
 @NoArgsConstructor
 public class AppUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	@Column
 	@UniqueUser
@@ -43,7 +42,7 @@ public class AppUser {
 	private String lastName;
 
 	@Column
-	private String adress;
+	private String street;
 
 	private String city;
 	private String country;

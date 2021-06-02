@@ -26,9 +26,6 @@ public class AuthController {
     private AuthService authService;
     private SocialService googleService;
     private SocialService facebookService;
-    @Value("${front.url}")
-    private String frontUrl;
-
 
     public AuthController(AuthService authService, SocialService googleService, SocialService facebookService) {
         this.googleService = googleService;
@@ -36,12 +33,6 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @GetMapping("/appUsers/info")
-    public ResponseEntity<?> userInfo(Principal principal){
-        if(principal==null)
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"you have no access");
-           return ResponseEntity.ok().body(authService.getUserByUserName(principal.getName()));
-    }
 
     @PostMapping(value = "/register")
     @ApiOperation(value = "register new user",response =JwtResponse.class )

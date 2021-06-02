@@ -1,8 +1,10 @@
 package com.adnanbk.ecommerceang.config;
 
 import com.adnanbk.ecommerceang.dto.ProductProjection;
+import com.adnanbk.ecommerceang.models.AppUser;
 import com.adnanbk.ecommerceang.models.Product;
 import com.adnanbk.ecommerceang.models.ProductCategory;
+import com.adnanbk.ecommerceang.models.UserOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -27,7 +29,7 @@ public class ExposeEntitiesRestConfiguration implements RepositoryRestConfigurer
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
         RepositoryRestConfigurer.super.configureRepositoryRestConfiguration(config, cors);
-        config.exposeIdsFor(ProductCategory.class,Product.class);
+        config.exposeIdsFor(ProductCategory.class,Product.class, AppUser.class);
     }
 
 

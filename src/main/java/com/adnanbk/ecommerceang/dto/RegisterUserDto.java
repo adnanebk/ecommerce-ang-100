@@ -23,7 +23,7 @@ public class RegisterUserDto {
     private boolean enabled;
 
 
-    private String adress;
+    private String street;
 
     private String city;
     private String country;

@@ -92,10 +92,7 @@ public class AuthServiceImp implements AuthService {
         emailSenderService.sendEmailConfirmation(user);
     }
 
-    @Override
-    public AppUser getUserByUserName(String username) {
-        return this.userRepo.findByUserName(username);
-    }
+
 
     private HashMap<String,Object> generateClaims(AppUser appUser){
        var claims =new HashMap<String,Object>();

@@ -13,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(name = "credit_card")
 public class CreditCard {
 
     @Id
@@ -27,6 +28,7 @@ public class CreditCard {
     @NotNull(message = "{error.notEmpty}")
     @Pattern(regexp = "^(?:(?<visa>[0-9]{12}(?:[0-9]{3})?)|(?<mastercard>[0-9]{14}))$"
               ,message = "{error.regExp}")
+    @Column(name = "card_name",unique = true)
     private String cardNumber;
 
     @NotEmpty

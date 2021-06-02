@@ -34,11 +34,6 @@ public class OrderController {
 
         this.userOderService = userOderService;
     }
-    @GetMapping("/userOrders/byUserName/{userName}")
-    @ApiOperation(value = "get orders by username",notes = "this endpoint returns all orders of the specified username including the order items ")
-    public ResponseEntity<Iterable<UserOrder>> getOrders(@PathVariable String userName){
-        return ResponseEntity.ok(userOderService.findAllByUserName(userName));
-    }
 
 
     @PostMapping("/userOrders")

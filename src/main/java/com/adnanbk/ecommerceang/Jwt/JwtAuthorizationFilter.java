@@ -37,7 +37,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 		return !request.getRequestURI().contains("userOrders") &&
-				!request.getRequestURI().contains("appUsers");
+				!request.getRequestURI().contains("appUsers") &&
+				!request.getRequestURI().contains("creditCards");
 	}
 
 	@Override

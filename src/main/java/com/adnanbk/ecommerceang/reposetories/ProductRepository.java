@@ -48,7 +48,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     //@Query("select prod from Product as prod where prod.category.Id = ?1 and lower(prod.name) like lower(concat('%', ?2,'%')) ")
     Page<Product>  findByCategoryIdAndNameIgnoreCase(Long id,String name, Pageable pageable);
 
-    @RestResource(path="ByNameOrDescription")
+    @RestResource(path="byNameOrDescription")
     Page<Product> findByNameIgnoreCaseContainsOrDescriptionIgnoreCaseContains(String name,String description, Pageable pageable);
 
     @RestResource(path="byName")

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CreditCardRepo extends CrudRepository<CreditCard, Long> {
+
     Optional<CreditCard> findByCardNumber(String cardNumber);
 
     @RestResource(path="byUserName")
