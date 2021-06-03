@@ -26,6 +26,8 @@ public class AuthController {
     private AuthService authService;
     private SocialService googleService;
     private SocialService facebookService;
+    @Value("${front.url}")
+    private String frontUrl;
 
     public AuthController(AuthService authService, SocialService googleService, SocialService facebookService) {
         this.googleService = googleService;

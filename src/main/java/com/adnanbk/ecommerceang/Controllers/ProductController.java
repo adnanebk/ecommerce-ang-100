@@ -16,7 +16,6 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.*;
-import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -126,9 +125,5 @@ public class ProductController {
                     .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
                     .body(file);   };
     }
-
-
-
-
 
 }

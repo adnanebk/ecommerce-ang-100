@@ -2,9 +2,6 @@ package com.adnanbk.ecommerceang.Controllers;
 
 import com.adnanbk.ecommerceang.models.CreditCard;
 import com.adnanbk.ecommerceang.models.UserOrder;
-import com.adnanbk.ecommerceang.reposetories.OrderItemRepo;
-import com.adnanbk.ecommerceang.reposetories.OrderRepository;
-import com.adnanbk.ecommerceang.reposetories.UserRepo;
 import com.adnanbk.ecommerceang.services.UserOderService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
