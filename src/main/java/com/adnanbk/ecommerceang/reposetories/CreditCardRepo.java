@@ -12,5 +12,6 @@ public interface CreditCardRepo extends CrudRepository<CreditCard, Long> {
     Optional<CreditCard> findByCardNumber(String cardNumber);
 
     @RestResource(path="byUserName")
-    List<CreditCard> findByAppUser_UserName(String userName);
+    List<CreditCard> findByAppUser_UserNameOrderByActiveDesc(String userName);
+
 }
