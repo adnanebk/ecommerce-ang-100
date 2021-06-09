@@ -23,15 +23,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 
 
-@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class ProductController {
 
     private final ImageService imageService;
     private final ProductService productService;
-
     private String baseUrl="";
+
 
     public ProductController(ImageService imageService, ProductService productService) {
         this.imageService = imageService;
@@ -53,7 +52,6 @@ public class ProductController {
     @PostMapping(value = "/products/images",consumes ="multipart/form-data")
     @ApiOperation(value = "Create product image",notes = "this endpoint uploads an image",response = String.class,consumes ="multipart/form-data")
     public CompletableFuture<ResponseEntity<String>> UploadProductImage(@RequestParam("image") MultipartFile file){
-
               return  this.imageService.CreateImage(file)
                       .thenApplyAsync((fileName-> ResponseEntity.created(URI.create(fileName)).body(fileName)));
 

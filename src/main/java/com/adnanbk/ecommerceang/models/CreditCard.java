@@ -37,7 +37,7 @@ public class CreditCard {
     @Pattern(regexp = "^\\d{2}\\/\\d{2}$",message = "{error.regExp}")
     private String expirationDate;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true
+    @OneToMany(cascade = CascadeType.ALL
             ,mappedBy = "creditCard"
     )
     @JsonIgnore

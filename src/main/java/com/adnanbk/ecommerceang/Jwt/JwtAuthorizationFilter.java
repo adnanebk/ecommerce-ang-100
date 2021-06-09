@@ -29,6 +29,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 	private final JwtTokenUtil jwtTokenUtil;
 	private UserRepo userRepo;
 
+
 	public JwtAuthorizationFilter(JwtTokenUtil jwtTokenUtil, UserRepo userRepo) {
 		this.jwtTokenUtil = jwtTokenUtil;
 		this.userRepo = userRepo;

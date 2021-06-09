@@ -56,8 +56,9 @@ public class UserOrder {
     private List<OrderItem> orderItems;
 
     public void setUserOrderItems(List<OrderItem> orderItems) {
-        orderItems.forEach(e->e.setUserOrder(this));
-        this.orderItems = orderItems;
+        //orderItems.forEach(e->e.setUserOrder(this));
+        this.orderItems.clear();
+        this.orderItems.addAll(orderItems);
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

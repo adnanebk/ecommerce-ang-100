@@ -23,14 +23,12 @@ public class UserOrderServiceImp implements UserOderService {
     private UserRepo userRepo;
     private OrderItemRepo orderItemRepo;
     private CreditCardRepo creditCardRepo;
-    private Validator validator;
 
-    public UserOrderServiceImp(OrderRepository orderRepository, UserRepo userRepo, OrderItemRepo orderItemRepo, CreditCardRepo creditCardRepo, Validator validator) {
+    public UserOrderServiceImp(OrderRepository orderRepository, UserRepo userRepo, OrderItemRepo orderItemRepo, CreditCardRepo creditCardRepo) {
         this.orderRepository = orderRepository;
         this.userRepo = userRepo;
         this.orderItemRepo = orderItemRepo;
         this.creditCardRepo = creditCardRepo;
-        this.validator = validator;
     }
 
 
@@ -39,24 +37,11 @@ public class UserOrderServiceImp implements UserOderService {
     public UserOrder saveOrder(UserOrder userOrder, String userName) {
         AppUser appUser =userRepo.findByUserName(userName);
         CreditCard creditCard=userOrder.getCreditCard();
-        if(creditCard==null)
-            throw new ValidationException("you must enter a credit card");
-        var errors= validator.validate(creditCard);
-        if(!errors.isEmpty())
-                throw new ConstraintViolationException(errors);
-        if(creditCard.getId()!= null && creditCard.getId()>0)
-           creditCard= creditCardRepo.findByCardNumber(creditCard.getCardNumber()).orElseThrow(
-                   ()->  new ValidationException("this credit card is not registered"));
-            else{
-            int year=2000+Integer.parseInt(creditCard.getExpirationDate().split("/")[1]);
-            int month=Integer.parseInt(creditCard.getExpirationDate().split("/")[0]);
-            LocalDate expirationDate= LocalDate.of(year,month,1);
-            if(expirationDate.isBefore(LocalDate.now()))
-                throw new ValidationException("your credit card has expired");
+
             var userCardOptional=creditCardRepo.findByCardNumber(creditCard.getCardNumber());
             creditCard.setAppUser(appUser);
-             creditCard=  userCardOptional.orElse(creditCardRepo.save(creditCard));
-        }
+            creditCard=userCardOptional.orElse(creditCardRepo.save(creditCard));
+
         userOrder.setAppUser(appUser);
         userOrder.setCreditCard(creditCard);
         userOrder.setUserOrderItems(orderItemRepo.saveAll(userOrder.getOrderItems()));

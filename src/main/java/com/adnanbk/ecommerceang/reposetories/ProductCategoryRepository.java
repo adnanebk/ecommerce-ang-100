@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import springfox.documentation.annotations.Cacheable;
 
-@CrossOrigin
 @RepositoryRestResource(collectionResourceRel = "productCategory", path = "product-category")
 public interface ProductCategoryRepository extends CrudRepository<ProductCategory, Long> {
 

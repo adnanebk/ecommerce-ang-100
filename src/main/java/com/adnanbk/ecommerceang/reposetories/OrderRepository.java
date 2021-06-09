@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 
-@CrossOrigin
 @RepositoryRestResource(excerptProjection = OrderProjection.class)
 @ApiImplicitParams(@ApiImplicitParam(name = "authorization",
         value = "Bearer jwt-token",paramType = "header"))

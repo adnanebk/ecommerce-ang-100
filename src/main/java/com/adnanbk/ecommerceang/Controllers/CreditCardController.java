@@ -12,7 +12,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/api/creditCards")
 public class CreditCardController {
