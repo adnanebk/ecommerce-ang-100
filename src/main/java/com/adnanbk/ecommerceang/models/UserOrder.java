@@ -68,6 +68,7 @@ public class UserOrder {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "card_id", nullable = false)
+    @NotNull
     private CreditCard creditCard;
 /*    private String country;
 
