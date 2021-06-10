@@ -28,7 +28,7 @@ public class Product {
     private ProductCategory category;
 
     @Column(name = "sku",unique = true)
-    @NotEmpty
+    @NotEmpty(message = "{error.empty}")
     private String sku;
 
     @Column(name = "name",unique = true)
