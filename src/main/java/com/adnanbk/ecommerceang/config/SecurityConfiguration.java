@@ -1,5 +1,4 @@
 package com.adnanbk.ecommerceang.config;
-import org.apache.commons.compress.utils.Lists;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,8 +17,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.servlet.Filter;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @EnableWebSecurity

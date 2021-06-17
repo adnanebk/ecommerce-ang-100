@@ -33,21 +33,12 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> handleConstraintViolation(RuntimeException ex) {
         System.out.println("******persistence exception******");
-        if(ex  instanceof ConstraintViolationException  cause) {
+
+        if(NestedExceptionUtils.getMostSpecificCause(ex)  instanceof ConstraintViolationException cause) {
             ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Try to fix these errors", generateErrors(cause));
             return ResponseEntity.badRequest().body(apiError);
         }
-        if(NestedExceptionUtils.getRootCause(ex)  instanceof ConstraintViolationException cause) {
-            for (var constr : cause.getConstraintViolations()) {
-                String property="";
-                if (constr.getPropertyPath() != null)
-                    property=constr.getPropertyPath().toString();
-
-                    return ResponseEntity.badRequest().body(new RuntimeException(property+" "+constr.getMessage()));
-
-            }
-        }
-        if(NestedExceptionUtils.getRootCause(ex) instanceof SQLIntegrityConstraintViolationException cause)
+        if(NestedExceptionUtils.getMostSpecificCause(ex) instanceof SQLIntegrityConstraintViolationException cause)
         {
             return returnUniqueErrorMessage(cause);
         }
