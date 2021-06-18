@@ -41,6 +41,7 @@ public class Product {
 
     @Column(name = "unit_price")
     @DecimalMin("0.0")
+    @NotNull(message = "{error.empty}")
     private BigDecimal unitPrice;
 
     @Column(name = "image")
@@ -52,6 +53,7 @@ public class Product {
 
     @Column(name = "units_in_stock")
     @Min(value = 0)
+    @NotNull(message = "{error.empty}")
     private Integer unitsInStock;
 
     @Column(name = "date_created")
