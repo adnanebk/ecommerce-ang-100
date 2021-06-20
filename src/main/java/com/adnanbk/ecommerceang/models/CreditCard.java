@@ -21,13 +21,13 @@ public class CreditCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @NotEmpty(message = "{error.notEmpty}")
+    @NotEmpty(message = "{error.empty}")
     @Pattern(regexp = "VISA|MASTERCARD")
     private String cardType;
 
     private Boolean active;
 
-    @NotNull(message = "{error.notEmpty}")
+    @NotNull(message = "{error.empty}")
     @Pattern(regexp = "^(?:(?<visa>[0-9]{12}(?:[0-9]{3})?)|(?<mastercard>[0-9]{14}))$"
               ,message = "{error.regExp}")
     @Column(name = "card_name",unique = true)
