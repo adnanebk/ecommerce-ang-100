@@ -37,6 +37,7 @@ public class Product {
 
     @Column(name = "description",length = 500)
     @Length(min = 10,message = "{error.min}")
+    @NotEmpty
     private String description;
 
     @Column(name = "unit_price")
